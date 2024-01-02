@@ -2,16 +2,17 @@ import { AuthBindings } from "@refinedev/core";
 import axios from "axios";
 export const TOKEN_KEY = "auth";
 export const API_URL = "https://api.finefoods.refine.dev";
-export const SERVER_URL = "http://localhost:8080/api/";
+export const SERVER_URL = "http://localhost:8080/v1";
 
 export const authProvider: AuthBindings = {
     login: async ({ email, password }) => {
         try {
-            const response = await axios.post(SERVER_URL + "auth/signin", {
+            const response = await axios.post(SERVER_URL + "/auth/login", {
                 email,
                 password
             })
-            if (response.data.accessToken) {
+            if (response.data.tokens) {
+                console.log(response.data.tokens);
                 localStorage.setItem(TOKEN_KEY, JSON.stringify(response.data));
                 return {
                     success: true,
@@ -37,10 +38,12 @@ export const authProvider: AuthBindings = {
             }
         }
     },
-    register: async ({ email, password }) => {
+    register: async ({ email, password, name, company }) => {
         try {
-            await axios.post(SERVER_URL + "auth/signup", {
+            await axios.post(SERVER_URL + "/auth/register", {
                 email,
+                name,
+                company: company.id,
                 password
             })
 

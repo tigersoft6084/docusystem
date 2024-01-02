@@ -15,7 +15,15 @@ const password = (value, helpers) => {
   return value;
 };
 
+const imageUrl = (value, helpers) => {
+  if (!value.match(/^\/(?:[^\/]+\/)*[^\/]+\.(?:jpg|jpeg|png|gif|bmp)$/)) {
+    return helpers.message('"{{#label}}" must be an image file');
+  }
+  return value;
+};
+
 module.exports = {
   objectId,
   password,
+  imageUrl
 };

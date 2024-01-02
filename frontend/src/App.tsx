@@ -25,37 +25,43 @@ import Dashboard from "@mui/icons-material/Dashboard";
 
 import { authProvider, TOKEN_KEY, API_URL, SERVER_URL } from "./authProvider";
 import { DashboardPage } from "./pages/dashboard";
-import { UserList, UserShow } from "./pages/users";
+import { UserList } from "./pages/users";
 import {
     CourierList,
     CourierShow,
     CourierCreate,
     CourierEdit,
 } from "./pages/couriers";
-import { AuthPage } from "./pages/auth";
 import { ProductList } from "./pages/products";
 import { CategoryList } from "./pages/categories";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
 import { BikeWhiteIcon } from "./components/icons/bike-white";
 import axios from "axios";
+import { AuthPage, RegisterPage } from "./pages/auth";
 
-const axiosInstance = axios.create();
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) {
-    const auth = JSON.parse(token);
-    const accessToken = auth.accessToken;
-    config.headers["x-access-token"] = `${token}`;
-  }
-  return config;
-});
+// const axiosInstance = axios.create();
+// axiosInstance.interceptors.request.use((config) => {
+//     console.log("Interceptor");
+//     const token = localStorage.getItem(TOKEN_KEY);
+//     console.log("Hello: " + token);
+//     if (token) {
+//         const auth = JSON.parse(token);
+//         const accessToken = auth.tokens.access.token;
+//         config.headers["Authorization"] = `Bearer ${accessToken}`;
+//     }
+//     return config;
+// });
 
 const App: React.FC = () => {
     // This hook is used to automatically login the user.
     // We use this hook to skip the login page and demonstrate the application more quickly.
     // const { loading } = useAutoLoginForDemo();
-
+    // console.log("Hello app");
+    // axios.interceptors.request.use((config)=>{
+    //     console.log("Config: " + config);
+    //     return config;
+    // })
     const { t, i18n } = useTranslation();
     const i18nProvider = {
         translate: (key: string, params: object) => t(key, params),
@@ -78,7 +84,7 @@ const App: React.FC = () => {
                     <RefineSnackbarProvider>
                         <Refine
                             routerProvider={routerProvider}
-                            dataProvider={dataProvider(API_URL)}
+                            dataProvider={dataProvider(SERVER_URL)}
                             authProvider={authProvider}
                             i18nProvider={i18nProvider}
                             options={{
@@ -151,10 +157,6 @@ const App: React.FC = () => {
 
                                     <Route path="/users">
                                         <Route index element={<UserList />} />
-                                        <Route
-                                            path="show/:id"
-                                            element={<UserShow />}
-                                        />
                                     </Route>
 
                                     <Route
@@ -214,15 +216,7 @@ const App: React.FC = () => {
                                     <Route
                                         path="/register"
                                         element={
-                                            <AuthPage
-                                                type="register"
-                                                formProps={{
-                                                    defaultValues: {
-                                                        email: "demo@refine.dev",
-                                                        password: "demodemo",
-                                                    },
-                                                }}
-                                            />
+                                            <RegisterPage />
                                         }
                                     />
                                     <Route

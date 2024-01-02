@@ -1,3 +1,8 @@
+export interface ICompany {
+    id: string;
+    name: string;
+}
+
 export interface IOrderChart {
     count: number;
     status:

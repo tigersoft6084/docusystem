@@ -1,6 +1,7 @@
 import * as React from "react";
 import { AuthPage as MUIAuthPage, AuthProps } from "@refinedev/mui";
 import { Link } from "react-router-dom";
+export * from "./register";
 
 const authWrapperProps = {
     style: {
