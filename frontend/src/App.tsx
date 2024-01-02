@@ -8,7 +8,8 @@ import {
 } from "@refinedev/mui";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import CssBaseline from "@mui/material/CssBaseline";
-import dataProvider from "@refinedev/simple-rest";
+// import dataProvider from "@refinedev/simple-rest";
+import { dataProvider } from "./rest-data-provider";
 import routerProvider, {
     CatchAllNavigate,
     NavigateToResource,
@@ -33,6 +34,7 @@ import {
     CourierEdit,
 } from "./pages/couriers";
 import { ProductList } from "./pages/products";
+import { CompanyList } from "./pages/companies";
 import { CategoryList } from "./pages/categories";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
@@ -40,28 +42,10 @@ import { BikeWhiteIcon } from "./components/icons/bike-white";
 import axios from "axios";
 import { AuthPage, RegisterPage } from "./pages/auth";
 
-// const axiosInstance = axios.create();
-// axiosInstance.interceptors.request.use((config) => {
-//     console.log("Interceptor");
-//     const token = localStorage.getItem(TOKEN_KEY);
-//     console.log("Hello: " + token);
-//     if (token) {
-//         const auth = JSON.parse(token);
-//         const accessToken = auth.tokens.access.token;
-//         config.headers["Authorization"] = `Bearer ${accessToken}`;
-//     }
-//     return config;
-// });
-
 const App: React.FC = () => {
     // This hook is used to automatically login the user.
     // We use this hook to skip the login page and demonstrate the application more quickly.
     // const { loading } = useAutoLoginForDemo();
-    // console.log("Hello app");
-    // axios.interceptors.request.use((config)=>{
-    //     console.log("Config: " + config);
-    //     return config;
-    // })
     const { t, i18n } = useTranslation();
     const i18nProvider = {
         translate: (key: string, params: object) => t(key, params),
@@ -124,6 +108,13 @@ const App: React.FC = () => {
                                     },
                                 },
                                 {
+                                    name: "companies",
+                                    list: "/companies",
+                                    meta: {
+                                        icon: <FolderOpenOutlinedIcon />,
+                                    },
+                                },
+                                {
                                     name: "couriers",
                                     list: "/couriers",
                                     create: "/couriers/create",
@@ -167,6 +158,11 @@ const App: React.FC = () => {
                                     <Route
                                         path="/files"
                                         element={<CategoryList />}
+                                    />
+
+                                    <Route
+                                        path="/companies"
+                                        element={<CompanyList />}
                                     />
 
                                     <Route path="/couriers">

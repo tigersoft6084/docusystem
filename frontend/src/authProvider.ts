@@ -106,8 +106,9 @@ export const authProvider: AuthBindings = {
         if (!token) {
             return null;
         }
-
-        return JSON.parse(token);
+        const auth = JSON.parse(token);
+        const user = auth.user;
+        return user;
         // return {
         //     id: 1,
         //     name: "James Sullivan",

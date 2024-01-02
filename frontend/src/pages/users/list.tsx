@@ -1,7 +1,8 @@
 import React from "react";
+import { useModalForm } from "@refinedev/react-hook-form";
+import { CreateButton, EditButton } from "@refinedev/mui";
+import Paper from "@mui/material/Paper";
 import {
-    CrudFilters,
-    getDefaultFilter,
     HttpError,
     IResourceComponentsProps,
     useTranslate,
@@ -13,102 +14,58 @@ import {
     ShowButton,
     useDataGrid,
 } from "@refinedev/mui";
-import { useForm } from "@refinedev/react-hook-form";
-import { Controller } from "react-hook-form";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
-import FormControl from "@mui/material/FormControl";
-import Grid from "@mui/material/Grid";
-import InputAdornment from "@mui/material/InputAdornment";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
-
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-
-import { IUser, IUserFilterVariables } from "../../interfaces";
+import {
+    EditUser,
+} from "../../components";
+import { IUser, IUserFilterVariables, Nullable } from "../../interfaces";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
 
-    const { dataGridProps, search, filters } = useDataGrid<
+    const { dataGridProps } = useDataGrid<
         IUser,
         HttpError,
         IUserFilterVariables
     >({
-        initialPageSize: 10,
-        onSearch: (params) => {
-            const filters: CrudFilters = [];
-            const { q, gender, isActive } = params;
-
-            filters.push({
-                field: "q",
-                operator: "eq",
-                value: q !== "" ? q : undefined,
-            });
-
-            filters.push({
-                field: "gender",
-                operator: "eq",
-                value: gender !== "" ? gender : undefined,
-            });
-
-            filters.push({
-                field: "isActive",
-                operator: "eq",
-                value: isActive !== "" ? isActive : undefined,
-            });
-
-            return filters;
-        },
+        initialPageSize: 10
     });
+
+    const editDrawerFormProps = useModalForm<
+        IUser,
+        HttpError,
+        Nullable<IUser>
+    >({
+        refineCoreProps: { action: "edit" },
+    });
+
+    const {
+        modal: { show: showEditDrawer },
+    } = editDrawerFormProps;
 
     const columns = React.useMemo<GridColDef<IUser>[]>(
         () => [
             {
-                field: "gsm",
-                headerName: t("users.fields.gsm"),
+                field: "name",
+                headerName: t("users.fields.name"),
                 minWidth: 150,
                 flex: 1,
             },
             {
-                field: "avatar",
-                headerName: t("users.fields.avatar.label"),
-                renderCell: function render({ row }) {
-                    return <Avatar src={row.avatar[0].url} />;
-                },
-                minWidth: 100,
-                flex: 1,
-                sortable: false,
-            },
-            {
-                field: "firstName",
-                headerName: t("users.fields.firstName"),
+                field: "email",
+                headerName: t("users.fields.email"),
                 minWidth: 150,
                 flex: 1,
             },
             {
-                field: "lastName",
-                headerName: t("users.fields.lastName"),
-                minWidth: 150,
-                flex: 1,
-            },
-            {
-                field: "gender",
-                headerName: t("users.fields.gender.label"),
+                field: "role",
+                headerName: t("users.fields.role.label"),
                 valueGetter: ({ row }) =>
-                    t(`users.fields.gender.${row.gender}`),
+                    t(`users.fields.role.${row.role}`),
             },
             {
-                field: "isActive",
-                headerName: t("users.fields.isActive.label"),
+                field: "isEmailVerified",
+                headerName: t("users.fields.isEmailVerified.label"),
                 align: "center",
                 headerAlign: "center",
                 renderCell: function render({ row }) {
@@ -117,7 +74,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                             svgIconProps={{
                                 sx: { width: "16px", height: "16px" },
                             }}
-                            value={row.isActive}
+                            value={row.isEmailVerified}
                         />
                     );
                 },
@@ -138,9 +95,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 headerName: t("table.actions"),
                 renderCell: function render({ row }) {
                     return (
-                        <ShowButton
+                        <EditButton
                             size="small"
                             hideText
+                            onClick={()=>showEditDrawer(row.id)}
                             recordItemId={row.id}
                         />
                     );
@@ -154,130 +112,19 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         [t],
     );
 
-    const { register, handleSubmit, control } = useForm<
-        IUser,
-        HttpError,
-        IUserFilterVariables
-    >({
-        defaultValues: {
-            q: getDefaultFilter("q", filters, "eq"),
-            gender: getDefaultFilter("gender", filters, "eq") || "",
-            isActive: getDefaultFilter("isActive", filters, "eq") || "",
-        },
-    });
-
     return (
-        <Grid container spacing={2}>
-            <Grid item xs={12} lg={3}>
-                <Card sx={{ paddingX: { xs: 2, md: 0 } }}>
-                    <CardHeader title={t("users.filter.title")} />
-                    <CardContent sx={{ pt: 0 }}>
-                        <Box
-                            component="form"
-                            sx={{ display: "flex", flexDirection: "column" }}
-                            autoComplete="off"
-                            onSubmit={handleSubmit(search)}
-                        >
-                            <TextField
-                                {...register("q")}
-                                label={t("users.filter.search.label")}
-                                placeholder={t(
-                                    "users.filter.search.placeholder",
-                                )}
-                                margin="normal"
-                                fullWidth
-                                autoFocus
-                                size="small"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchOutlinedIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                            <Controller
-                                control={control}
-                                name="gender"
-                                render={({ field }: { field: any }) => (
-                                    <FormControl margin="normal" size="small">
-                                        <InputLabel id="gender-select">
-                                            {t("users.filter.gender.label")}
-                                        </InputLabel>
-                                        <Select
-                                            {...field}
-                                            labelId="gender-select"
-                                            label={t(
-                                                "users.filter.gender.label",
-                                            )}
-                                        >
-                                            <MenuItem value="">
-                                                <em>None</em>
-                                            </MenuItem>
-                                            <MenuItem value="Male">
-                                                {t("users.filter.gender.male")}
-                                            </MenuItem>
-                                            <MenuItem value="Female">
-                                                {t(
-                                                    "users.filter.gender.female",
-                                                )}
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                )}
-                            />
-                            <Controller
-                                control={control}
-                                name="isActive"
-                                render={({ field }: { field: any }) => (
-                                    <FormControl margin="normal" size="small">
-                                        <InputLabel id="isActive-select">
-                                            {t("users.filter.isActive.label")}
-                                        </InputLabel>
-                                        <Select
-                                            {...field}
-                                            labelId="isActive-select"
-                                            label={t(
-                                                "users.filter.isActive.label",
-                                            )}
-                                        >
-                                            <MenuItem value="">
-                                                <em>None</em>
-                                            </MenuItem>
-                                            <MenuItem value="true">
-                                                {t(
-                                                    "users.filter.isActive.true",
-                                                )}
-                                            </MenuItem>
-                                            <MenuItem value="false">
-                                                {t(
-                                                    "users.filter.isActive.false",
-                                                )}
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                )}
-                            />
+        <Paper>
+            <EditUser {...editDrawerFormProps} />
+            <List wrapperProps={{ sx: { paddingX: { xs: 2, md: 0 } } }}>
+                <DataGrid
+                    {...dataGridProps}
+                    columns={columns}
+                    filterModel={undefined}
+                    autoHeight
+                    pageSizeOptions={[10, 20, 50, 100]}
+                />
+            </List>
+        </Paper>
 
-                            <br />
-                            <Button type="submit" variant="contained">
-                                {t("orders.filter.submit")}
-                            </Button>
-                        </Box>
-                    </CardContent>
-                </Card>
-            </Grid>
-            <Grid item xs={12} lg={9}>
-                <List wrapperProps={{ sx: { paddingX: { xs: 2, md: 0 } } }}>
-                    <DataGrid
-                        {...dataGridProps}
-                        columns={columns}
-                        filterModel={undefined}
-                        autoHeight
-                        pageSizeOptions={[10, 20, 50, 100]}
-                    />
-                </List>
-            </Grid>
-        </Grid>
     );
 };

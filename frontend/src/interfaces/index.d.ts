@@ -30,16 +30,22 @@ export interface IOrderStatus {
 }
 
 export interface IUser {
-    id: number;
-    firstName: string;
-    lastName: string;
-    fullName: string;
+    id: string;
+    email: string;
+    name: string;
+    company: ICompany;
     gender: string;
-    gsm: string;
     createdAt: string;
+    isEmailVerified: boolean;
     isActive: boolean;
-    avatar: IFile[];
-    addresses: IAddress[];
+    role: "user" | "admin"
+}
+
+export interface IBoxFile {
+    id: string;
+    no: number;
+    name: string;
+    company: ICompany;
 }
 
 export interface IIdentity {

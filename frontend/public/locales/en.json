@@ -351,6 +351,13 @@
                 "label": "Avatar",
                 "description": "Click or drag avatar image to this area to upload."
             },
+            "email": "Email",
+            "role": {
+                "label": "Role",
+                "admin": "Admin",
+                "user": "User"
+            },
+            "name": "Name",
             "firstName": "First Name",
             "lastName": "Last Name",
             "gender": {
@@ -362,6 +369,11 @@
             "createdAt": "CreatedAt",
             "isActive": {
                 "label": "Active",
+                "true": "Yes",
+                "false": "No"
+            },
+            "isEmailVerified": {
+                "label": "Email Verified",
                 "true": "Yes",
                 "false": "No"
             }

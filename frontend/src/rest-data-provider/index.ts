@@ -24,22 +24,19 @@ export const dataProvider = (
     const queryFilters = generateFilter(filters);
 
     const query: {
-      _start?: number;
-      _end?: number;
-      _sort?: string;
-      _order?: string;
+      page?: number;
+      limit?: number;
+      sortBy?: string;
     } = {};
 
     if (mode === "server") {
-      query._start = (current - 1) * pageSize;
-      query._end = current * pageSize;
+      query.page = current;
+      query.limit = pageSize;
     }
 
     const generatedSort = generateSort(sorters);
     if (generatedSort) {
-      const { _sort, _order } = generatedSort;
-      query._sort = _sort.join(",");
-      query._order = _order.join(",");
+      query.sortBy = generatedSort.join(",");
     }
 
     const { data, headers } = await httpClient[requestMethod](
@@ -49,11 +46,9 @@ export const dataProvider = (
       }
     );
 
-    const total = +headers["x-total-count"];
-
     return {
-      data,
-      total: total || data.length,
+      data: data.results,
+      total: data.totalResults || data.length,
     };
   },
 
