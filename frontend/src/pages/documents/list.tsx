@@ -96,7 +96,7 @@ export const DocumentList: React.FC<IResourceComponentsProps> = () => {
                             >
                                 <InputBase
                                     sx={{ ml: 1, flex: 1 }}
-                                    placeholder={t("stores.documentSearch")}
+                                    placeholder={t("documents.search")}
                                     inputProps={{
                                         "aria-label": "document search",
                                     }}
@@ -110,7 +110,7 @@ export const DocumentList: React.FC<IResourceComponentsProps> = () => {
                                     ) => {
                                         setFilters([
                                             {
-                                                field: "name",
+                                                field: "q",
                                                 operator: "contains",
                                                 value:
                                                     e.target.value !== ""
@@ -133,7 +133,7 @@ export const DocumentList: React.FC<IResourceComponentsProps> = () => {
                                 variant="outlined"
                                 sx={{ marginBottom: "5px" }}
                             >
-                                {t("stores.buttons.addDocument")}
+                                {t("documents.buttons.addDocument")}
                             </CreateButton>
                         </Stack>
                         <Grid container>

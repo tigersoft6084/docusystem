@@ -10,7 +10,9 @@ const createDocument = catchAsync(async (req, res) => {
 });
 
 const getDocuments = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  console.log("query");
+  console.log(req.query);
+  const filter = pick(req.query, ['name', 'title', 'q', 'boxFile']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await documentService.queryDocuments(filter, options);
   res.send(result);

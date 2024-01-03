@@ -199,7 +199,7 @@ export const CreateDocument: React.FC<
                                         }}
                                     >
                                         {t(
-                                            "documents.fields.images.title",
+                                            "documents.fields.images.description",
                                         )}
                                     </Typography>
                                     <Typography style={{ fontSize: "12px" }}>

@@ -123,54 +123,16 @@
         "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
         "importProgress": "Importing: {{processed}}/{{total}}"
     },
-    "categories": {
-        "categories": "Categories",
+    "companies": {
+        "companies": "Companies",
         "titles": {
-            "list": "Categories"
+            "list": "Companies",
+            "edit": "Edit Company",
+            "create": "Create Company"
         },
         "fields": {
             "id": "ID",
-            "title": "Title",
-            "isActive": "Active"
-        }
-    },
-    "couriers": {
-        "couriers": "Couriers",
-        "titles": {
-            "create": "Create Courier",
-            "list": "Couriers",
-            "edit": "Edit Courier"
-        },
-        "fields": {
-            "id": "ID",
-            "avatar": {
-                "label": "Avatar",
-                "description": "Click or drag avatar image to this area to upload."
-            },
-            "name": "Name",
-            "surname": "Surname",
-            "gender": {
-                "label": "Gender",
-                "male": "Male",
-                "female": "Female"
-            },
-            "gsm": "Phone",
-            "email": "E-Mail",
-            "address": "Address",
-            "createdAt": "CreatedAt",
-            "isActive": "Is Active",
-            "images": {
-                "label": "Images",
-                "description": "Add user picture",
-                "validation": "must be 480x480 px"
-            },
-            "store": "Store",
-            "vehicle": "Vehicle",
-            "accountNumber": "Account Number"
-        },
-        "steps": {
-            "content": "Content",
-            "relations": "Relations"
+            "name": "Name"
         }
     },
     "dashboard": {
@@ -219,124 +181,32 @@
             "Cancelled": "Cancelled"
         }
     },
-    "orders": {
-        "orders": "Orders",
+    "documents": {
+        "documents": "Documents",
+        "noDocuments": "No Documents",
         "titles": {
-            "list": "Orders",
-            "show": "Show Order"
-        },
-        "fields": {
-            "orderNumber": "Order Number",
-            "orderID": "Order ID",
-            "status": "Status",
-            "store": "Store",
-            "user": "User",
-            "products": "Products",
-            "createdAt": "CreatedAt",
-            "amount": "Amount",
-            "itemsAmount": "{{amount}} items"
-        },
-        "filter": {
-            "title": "Filters",
-            "search": {
-                "label": "Search",
-                "placeholder": "Order Number, User, etc."
-            },
-            "status": {
-                "label": "Status",
-                "placeholder": "Order Status"
-            },
-            "store": {
-                "label": "Store",
-                "placeholder": "Search Stores"
-            },
-            "user": {
-                "label": "User",
-                "placeholder": "Search Users"
-            },
-            "createdAt": {
-                "label": "Created At"
-            },
-            "submit": "Filter"
-        },
-        "courier": {
-            "deliveryTime": "Delivery Time",
-            "phone": "Phone"
-        },
-        "deliverables": {
-            "deliverables": "Deliverables",
-            "fields": {
-                "items": "Items",
-                "quantity": "Quantity",
-                "price": "Price",
-                "total": "Total"
-            },
-            "mainTotal": "MAIN TOTAL"
-        }
-    },
-    "products": {
-        "products": "Products",
-        "noProducts": "No Products",
-        "titles": {
-            "list": "Products",
-            "create": "Create Product",
-            "edit": "Edit Product"
+            "list": "Documents",
+            "create": "Create Document",
+            "edit": "Edit Document"
         },
         "fields": {
             "id": "ID",
             "name": "Name",
-            "description": "Description",
+            "title": "Title",
             "isActive": "Active",
             "price": "Price",
             "category": "Category",
             "images": {
                 "label": "Images",
-                "description": "Add product picture",
-                "validation": "must be 1080x1080 px"
+                "description": "Add document picture",
+                "validation": "must be image format"
             },
             "createdAt": "CreatedAt"
-        }
-    },
-    "reviews": {
-        "reviews": "Reviews",
-        "titles": {
-            "list": "Reviews"
         },
-        "fields": {
-            "user": "User",
-            "orderId": "Order ID",
-            "review": "Review",
-            "rating": "Rating"
-        }
-    },
-    "stores": {
-        "stores": "Stores",
-        "titles": {
-            "create": "Create Store",
-            "edit": "Edit Store",
-            "list": "Stores",
-            "show": "Show Store"
-        },
-        "fields": {
-            "id": "Store ID",
-            "title": "Title",
-            "isActive": "Active",
-            "createdAt": "CreatedAt",
-            "address": "Address",
-            "email": "Email",
-            "gsm": "Phone"
-        },
+        "search": "Search",
         "buttons": {
-            "editProducts": "Edit Products",
-            "addProduct": "Add Product",
-            "outOfStock": "Out Of Stock",
-            "edit": "Edit Product"
-        },
-        "selectLocation": "Choose store location on the map",
-        "storeProducts": "Store Products",
-        "tagFilterDescription": "Use tags to filter your search",
-        "all": "All",
-        "productSearch": "Product Search"
+            "addDocument": "Add Document"
+        }
     },
     "users": {
         "users": "Users",

@@ -12,9 +12,11 @@ const createDocument = {
 
 const getDocuments = {
   query: Joi.object().keys({
+    q: Joi.string(),
     name: Joi.string(),
     title: Joi.string(),
     sortBy: Joi.string(),
+    boxFile: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
@@ -32,9 +34,9 @@ const updateDocument = {
   }),
   body: Joi.object()
     .keys({
-      name: Joi.string(),
+      name: Joi.string().required(),
       title: Joi.string().required(),
-      photo: Joi.string().required().custom(imageUrl),
+      images: Joi.array().items(Joi.object()).min(1),
       boxFile: Joi.object()
     })
     .min(1),

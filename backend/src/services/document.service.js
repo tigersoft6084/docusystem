@@ -28,6 +28,31 @@ const createDocument = async (documentBody) => {
  */
 const queryDocuments = async (filter, options) => {
   options.populate = "boxFile";
+  const {q, boxFile} = filter;
+  if (q !== undefined) {
+    if (q === '') {
+      // delete filter.q;
+    }
+    else {
+      const regex = new RegExp(q, 'i');
+      filter.$or = [{
+        name: {
+          $regex: regex
+        }
+      },
+      {
+        title: {
+          $regex: regex
+        }
+      },
+      ]
+    }
+    delete filter.q;
+  }
+  if (boxFile !== undefined) {
+    filter.boxFile = boxFile.split(",");
+  }
+  console.log(filter);
   const documents = await Document.paginate(filter, options);
   return documents;
 };

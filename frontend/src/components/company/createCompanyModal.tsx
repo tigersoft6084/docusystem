@@ -45,7 +45,7 @@ export const CreateCompanyModal: React.FC<
                         helperText={errors.name?.message}
                         margin="normal"
                         fullWidth
-                        label={t("company.fields.name")}
+                        label={t("companies.fields.name")}
                         name="name"
                     />
                 </Box>

@@ -11,7 +11,7 @@ export const generateFilter = (filters?: CrudFilters) => {
           `[@refinedev/simple-rest]: \`operator: ${filter.operator}\` is not supported. You can create custom data provider. https://refine.dev/docs/api-reference/core/providers/data-provider/#creating-a-data-provider`
         );
       }
-
+      console.log(filter);
       if ("field" in filter) {
         const { field, operator, value } = filter;
 
@@ -21,7 +21,11 @@ export const generateFilter = (filters?: CrudFilters) => {
         }
 
         const mappedOperator = mapOperator(operator);
-        queryFilters[`${field}${mappedOperator}`] = value;
+        if (Array.isArray(value)) {
+          queryFilters[`${field}${mappedOperator}`] = value.join(",");
+        }
+        else
+          queryFilters[`${field}${mappedOperator}`] = value;
       }
     });
   }

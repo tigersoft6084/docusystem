@@ -32,7 +32,7 @@ export const CompanyList: React.FC = () => {
 
     const columns = React.useMemo<GridColDef<ICompany>[]>(
         () => [
-            { field: "name", headerName: t("company.fields.name"), minWidth: 400, flex: 1 },
+            { field: "name", headerName: t("companies.fields.name"), minWidth: 400, flex: 1 },
             {
                 field: "actions",
                 headerName: "Actions",

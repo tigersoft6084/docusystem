@@ -16,7 +16,7 @@ export const authProvider: AuthBindings = {
                 localStorage.setItem(TOKEN_KEY, JSON.stringify(response.data));
                 return {
                     success: true,
-                    redirectTo: "/",
+                    redirectTo: "/documents",
                 };
             }
         }

@@ -23,7 +23,7 @@ export const BoxFileFilter: React.FC<ProductItemProps> = ({
     const t = useTranslate();
 
     const [filterBoxFiles, setFilterBoxFiles] = useState<string[]>(
-        getDefaultFilter("boxFile.id", filters, "in") ?? [],
+        getDefaultFilter("boxFile", filters, "in") ?? [],
     );
 
     const { data: boxFiles, isLoading } = useList<IBoxFile>({
@@ -39,7 +39,7 @@ export const BoxFileFilter: React.FC<ProductItemProps> = ({
     useEffect(() => {
         setFilters?.([
             {
-                field: "boxFile.id",
+                field: "boxFile",
                 operator: "in",
                 value:
                     filterBoxFiles.length > 0 ? filterBoxFiles : undefined,

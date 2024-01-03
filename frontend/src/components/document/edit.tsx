@@ -47,6 +47,17 @@ export const EditDocument: React.FC<
 
     const { autocompleteProps } = useAutocomplete<IBoxFile>({
         resource: "box-files",
+        onSearch: (value) => [{
+            field: "no",
+            operator: "contains",
+            value
+        }],
+        sorters: [
+            {
+                field: 'no',
+                order: 'asc'
+            }
+        ]
     });
 
     const imageInput = watch("images");
@@ -79,7 +90,6 @@ export const EditDocument: React.FC<
             {
                 name,
                 size,
-                type,
                 lastModified,
                 url: res.data.url,
             },
@@ -102,7 +112,11 @@ export const EditDocument: React.FC<
                     avatar: (
                         <IconButton
                             onClick={() => close()}
-                            sx={{ width: "30px", height: "30px", mb: "5px" }}
+                            sx={{
+                                width: "30px",
+                                height: "30px",
+                                mb: "5px",
+                            }}
                         >
                             <CloseIcon />
                         </IconButton>
@@ -113,9 +127,9 @@ export const EditDocument: React.FC<
             >
                 <Stack>
                     <Box
+                        paddingX="50px"
                         justifyContent="center"
                         alignItems="center"
-                        marginBottom="50px"
                         sx={{
                             paddingX: {
                                 xs: 1,
@@ -126,7 +140,7 @@ export const EditDocument: React.FC<
                         <form onSubmit={handleSubmit(onFinish)}>
                             <FormControl sx={{ width: "100%" }}>
                                 <FormLabel required>
-                                    {t("products.fields.images.label")}
+                                    {t("documents.fields.images.label")}
                                 </FormLabel>
                                 <Stack
                                     display="flex"
@@ -169,25 +183,28 @@ export const EditDocument: React.FC<
                                                 },
                                             }}
                                             src={
-                                                (imageInput as IFile[]) &&
-                                                (imageInput as IFile[])[0].url
+                                                apiUrl + '/uploads/' + (
+                                                    (imageInput as IFile[]) &&
+                                                    ((imageInput as IFile[])[0]
+                                                        .url as string)
+                                                )
                                             }
-                                            alt="Store Location"
+                                            alt="Document Scanned Image"
                                         />
                                     </label>
                                     <Typography
                                         variant="body2"
-                                        sx={{
+                                        style={{
                                             fontWeight: 800,
                                             marginTop: "8px",
                                         }}
                                     >
                                         {t(
-                                            "products.fields.images.description",
+                                            "documents.fields.images.description",
                                         )}
                                     </Typography>
                                     <Typography style={{ fontSize: "12px" }}>
-                                        {t("products.fields.images.validation")}
+                                        {t("documents.fields.images.validation")}
                                     </Typography>
                                 </Stack>
                                 {errors.images && (
@@ -199,7 +216,7 @@ export const EditDocument: React.FC<
                             <Stack gap="10px" marginTop="10px">
                                 <FormControl>
                                     <FormLabel required>
-                                        {t("products.fields.name")}
+                                        {t("documents.fields.name")}
                                     </FormLabel>
                                     <OutlinedInput
                                         id="name"
@@ -219,11 +236,11 @@ export const EditDocument: React.FC<
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel required>
-                                        {t("products.fields.description")}
+                                        {t("documents.fields.title")}
                                     </FormLabel>
                                     <OutlinedInput
-                                        id="description"
-                                        {...register("description", {
+                                        id="title"
+                                        {...register("title", {
                                             required: t(
                                                 "errors.required.field",
                                                 { field: "Description" },
@@ -233,45 +250,16 @@ export const EditDocument: React.FC<
                                         minRows={5}
                                         maxRows={5}
                                     />
-                                    {errors.description && (
+                                    {errors.title && (
                                         <FormHelperText error>
-                                            {errors.description.message}
+                                            {errors.title.message}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
                                 <FormControl>
-                                    <FormLabel required>
-                                        {t("products.fields.price")}
-                                    </FormLabel>
-                                    <OutlinedInput
-                                        id="price"
-                                        {...register("price", {
-                                            required: t(
-                                                "errors.required.field",
-                                                { field: "Price" },
-                                            ),
-                                        })}
-                                        style={{
-                                            width: "150px",
-                                            height: "40px",
-                                        }}
-                                        type="number"
-                                        startAdornment={
-                                            <InputAdornment position="start">
-                                                $
-                                            </InputAdornment>
-                                        }
-                                    />
-                                    {errors.price && (
-                                        <FormHelperText error>
-                                            {errors.price.message}
-                                        </FormHelperText>
-                                    )}
-                                </FormControl>
-                                <FormControl sx={{ marginTop: "10px" }}>
                                     <Controller
                                         control={control}
-                                        name="category"
+                                        name="boxFile"
                                         rules={{
                                             required: t(
                                                 "errors.required.field",
@@ -289,13 +277,13 @@ export const EditDocument: React.FC<
                                                     field.onChange(value);
                                                 }}
                                                 getOptionLabel={(item) => {
-                                                    return item.title
-                                                        ? item.title
+                                                    return item.no
+                                                        ? `${item.no}`
                                                         : autocompleteProps?.options?.find(
-                                                              (p) =>
-                                                                  p.id.toString() ===
-                                                                  item.toString(),
-                                                          )?.title ?? "";
+                                                            (p) =>
+                                                                p.id.toString() ===
+                                                                item.toString(),
+                                                        )?.no.toString() ?? "";
                                                 }}
                                                 isOptionEqualToValue={(
                                                     option,
@@ -312,8 +300,8 @@ export const EditDocument: React.FC<
                                                         {...params}
                                                         label="BoxFile"
                                                         variant="outlined"
-                                                        error={
-                                                            !!errors.category
+                                                        error={ 
+                                                            !!errors.boxFile
                                                                 ?.message
                                                         }
                                                         required
@@ -322,68 +310,9 @@ export const EditDocument: React.FC<
                                             />
                                         )}
                                     />
-                                    {errors.category && (
+                                    {errors.boxFile && (
                                         <FormHelperText error>
-                                            {errors.category.message}
-                                        </FormHelperText>
-                                    )}
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel required>
-                                        {t("products.fields.isActive")}
-                                    </FormLabel>
-                                    <Controller
-                                        control={control}
-                                        {...register("isActive")}
-                                        defaultValue={false}
-                                        render={({ field }) => {
-                                            return (
-                                                <RadioGroup
-                                                    id="isActive"
-                                                    defaultValue={getValues(
-                                                        "isActive",
-                                                    )}
-                                                    {...field}
-                                                    onChange={(event) => {
-                                                        const value =
-                                                            event.target
-                                                                .value ===
-                                                            "true";
-
-                                                        setValue(
-                                                            "isActive",
-                                                            value,
-                                                            {
-                                                                shouldValidate:
-                                                                    true,
-                                                            },
-                                                        );
-
-                                                        return value;
-                                                    }}
-                                                    row
-                                                >
-                                                    <FormControlLabel
-                                                        value={true}
-                                                        control={<Radio />}
-                                                        label={t(
-                                                            "status.enable",
-                                                        )}
-                                                    />
-                                                    <FormControlLabel
-                                                        value={false}
-                                                        control={<Radio />}
-                                                        label={t(
-                                                            "status.disable",
-                                                        )}
-                                                    />
-                                                </RadioGroup>
-                                            );
-                                        }}
-                                    />
-                                    {errors.isActive && (
-                                        <FormHelperText error>
-                                            {errors.isActive.message}
+                                            {errors.boxFile.message}
                                         </FormHelperText>
                                     )}
                                 </FormControl>

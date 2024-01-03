@@ -22,24 +22,14 @@ import FileOpenOutlinedIcon from '@mui/icons-material/FileOpenOutlined';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import ComputerIcon from "@mui/icons-material/Computer";
 import PeopleOutlineOutlined from "@mui/icons-material/PeopleOutlineOutlined";
-import Dashboard from "@mui/icons-material/Dashboard";
 
 import { authProvider, TOKEN_KEY, API_URL, SERVER_URL } from "./authProvider";
-import { DashboardPage } from "./pages/dashboard";
 import { UserList } from "./pages/users";
-import {
-    CourierList,
-    CourierShow,
-    CourierCreate,
-    CourierEdit,
-} from "./pages/couriers";
 import { DocumentList } from "./pages/documents";
 import { CompanyList } from "./pages/companies";
 import { BoxFileList } from "./pages/box-files";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
-import { BikeWhiteIcon } from "./components/icons/bike-white";
-import axios from "axios";
 import { AuthPage, RegisterPage } from "./pages/auth";
 
 const App: React.FC = () => {
@@ -78,14 +68,6 @@ const App: React.FC = () => {
                             notificationProvider={notificationProvider}
                             resources={[
                                 {
-                                    name: "dashboard",
-                                    list: "/",
-                                    meta: {
-                                        label: "Dashboard",
-                                        icon: <Dashboard />,
-                                    },
-                                },
-                                {
                                     name: "users",
                                     list: "/users",
                                     show: "/users/show/:id",
@@ -114,16 +96,6 @@ const App: React.FC = () => {
                                         icon: <ComputerIcon />,
                                     },
                                 },
-                                {
-                                    name: "couriers",
-                                    list: "/couriers",
-                                    create: "/couriers/create",
-                                    edit: "/couriers/edit/:id",
-                                    show: "/couriers/show/:id",
-                                    meta: {
-                                        icon: <BikeWhiteIcon />,
-                                    },
-                                },
                             ]}
                         >
                             <Routes>
@@ -144,8 +116,6 @@ const App: React.FC = () => {
                                         </Authenticated>
                                     }
                                 >
-                                    <Route index element={<DashboardPage />} />
-
                                     <Route path="/users">
                                         <Route index element={<UserList />} />
                                     </Route>
@@ -164,25 +134,6 @@ const App: React.FC = () => {
                                         path="/companies"
                                         element={<CompanyList />}
                                     />
-
-                                    <Route path="/couriers">
-                                        <Route
-                                            index
-                                            element={<CourierList />}
-                                        />
-                                        <Route
-                                            path="create"
-                                            element={<CourierCreate />}
-                                        />
-                                        <Route
-                                            path="edit/:id"
-                                            element={<CourierEdit />}
-                                        />
-                                        <Route
-                                            path="show/:id"
-                                            element={<CourierShow />}
-                                        />
-                                    </Route>
                                 </Route>
 
                                 <Route
