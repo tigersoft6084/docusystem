@@ -13,8 +13,18 @@ const documentSchema = mongoose.Schema(
       required: true,
       trim: true
     },
-    photo: { type: String, required: true },
-    box_file: {
+    images: [
+    {
+      name: String,
+      percent: Number,
+      size: Number,
+      status: {
+        type: String,
+        enum: ["error", "success", "done", "uploading", "removed"]
+      },
+      url: String
+    }],
+    boxFile: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'BoxFile',
       required: true,

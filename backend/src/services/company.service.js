@@ -24,15 +24,12 @@ const createCompany = async (companyBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryCompanies = async (filter, options) => {
-  console.log(filter);
-  if (filter.title_like !== undefined) {
-    console.log(filter.title_like);
-    const regex = new RegExp(filter.title_like, 'i');
-    const companies = await Company.find({name: {$regex: regex}})
-    return companies.map(company=>({
-      id: company._id,
-      name: company.name
-    }))
+  if (filter.name !== undefined) {
+    if (filter.name === '') delete filter.name;
+    else {
+      const regex = new RegExp(filter.name, 'i');
+      filter.name = {$regex: regex}  
+    }
   }
   const companies = await Company.paginate(filter, options);
   return companies;

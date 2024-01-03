@@ -48,6 +48,11 @@ export const EditUser: React.FC<
 
         const { autocompleteProps } = useAutocomplete<ICompany>({
             resource: "companies",
+            onSearch: (value) => [{
+                field: "name",
+                operator: "contains",
+                value
+            }]
         });
 
         return (
@@ -186,44 +191,53 @@ export const EditUser: React.FC<
                                             </FormHelperText>
                                         )}
                                     </FormControl>
-                                    <FormControl>
+                                    <FormControl sx={{ marginTop: "10px" }}>
                                         <FormLabel required>
                                             {t("users.fields.role.label")}
                                         </FormLabel>
                                         <Controller
                                             control={control}
-                                            {...register("role")}
-                                            defaultValue={"user"}
-                                            render={({ field }) => {
-                                                return (
-                                                    <Select
-                                                        id="role"
-                                                        defaultValue={getValues(
-                                                            "role",
-                                                        )}
-                                                        {...field}
-                                                        onChange={(event) => {
-                                                            const value = event.target.value;
-
-                                                            setValue(
-                                                                "role",
-                                                                value,
-                                                                {
-                                                                    shouldValidate: true,
-                                                                },
-                                                            );
-                                                            return value;
-                                                        }}
-                                                    >
-                                                        <MenuItem value="user">User</MenuItem>
-                                                        <MenuItem value="admin">Admin</MenuItem>
-                                                    </Select>
-                                                );
+                                            name="role"
+                                            rules={{
+                                                required: t(
+                                                    "errors.required.field",
+                                                    { field: "Role" },
+                                                ),
                                             }}
+                                            defaultValue={null as any}
+                                            render={({ field }) => (
+                                                <Autocomplete
+                                                    {...field}
+                                                    onChange={(
+                                                        _,
+                                                        value,
+                                                    ) => {
+                                                        field.onChange(
+                                                            value,
+                                                        );
+                                                    }}
+                                                    options={[
+                                                        "user",
+                                                        "admin",
+                                                    ]}
+                                                    renderInput={(
+                                                        params,
+                                                    ) => (
+                                                        <TextField
+                                                            {...params}
+                                                            variant="outlined"
+                                                            error={
+                                                                !!errors.role
+                                                            }
+                                                            required
+                                                        />
+                                                    )}
+                                                />
+                                            )}
                                         />
-                                        {errors.isEmailVerified && (
+                                        {errors.role && (
                                             <FormHelperText error>
-                                                {errors.isEmailVerified.message}
+                                                {errors.role.message}
                                             </FormHelperText>
                                         )}
                                     </FormControl>

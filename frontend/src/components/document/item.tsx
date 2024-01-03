@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTranslate, BaseKey } from "@refinedev/core";
+import { useTranslate, BaseKey, useApiUrl } from "@refinedev/core";
 
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -16,28 +16,27 @@ import TextField from "@mui/material/TextField";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { IProduct } from "../../interfaces";
+import { IDocument } from "../../interfaces";
+import { DateField } from "@refinedev/mui";
 
-type PropductItem = {
-    updateStock?: (changedValue: number, clickedProduct: IProduct) => void;
-    product: IProduct;
+type DocumentItem = {
+    document: IDocument;
     show: (id: BaseKey) => void;
 };
 
-export const ProductItem: React.FC<PropductItem> = ({
-    product,
+export const DocumentItem: React.FC<DocumentItem> = ({
+    document,
     show,
-    updateStock,
 }) => {
     const t = useTranslate();
-    const { id, name, description, images, price } = product;
+    const { id, name, title, images, boxFile, createdAt } = document;
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
-
+    const apiUrl = useApiUrl();
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -92,6 +91,22 @@ export const ProductItem: React.FC<PropductItem> = ({
                     </Box>
                 }
                 sx={{ padding: 0 }}
+                title={
+                    <Tooltip title={name}>
+                        <Typography
+                            sx={{
+                                fontWeight: 800,
+                                fontSize: "18px",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                textOverflow: "ellipsis",
+                                paddingLeft: 2
+                            }}
+                        >
+                            {name}
+                        </Typography>
+                    </Tooltip>
+                }
             />
             <Box
                 sx={{
@@ -104,39 +119,26 @@ export const ProductItem: React.FC<PropductItem> = ({
                     sx={{
                         width: { xs: 60, sm: 84, lg: 108, xl: 144 },
                         height: { xs: 60, sm: 84, lg: 108, xl: 144 },
-                        borderRadius: "50%",
+                        borderRadius: "10%",
                     }}
                     alt={name}
-                    image={images[0].url}
+                    image={`${apiUrl}/uploads/${images[0].url}`}
                 />
             </Box>
             <CardContent
                 sx={{
-                    paddingX: "36px",
+                    paddingX: 2,
                     display: "flex",
                     flexDirection: "column",
                     flex: 1,
                 }}
             >
-                <Divider />
-                <Tooltip title={name}>
-                    <Typography
-                        sx={{
-                            fontWeight: 800,
-                            fontSize: "18px",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                        }}
-                    >
-                        {name}
-                    </Typography>
-                </Tooltip>
-                <Tooltip title={description}>
+                <Tooltip title={title}>
                     <Typography
                         variant="body2"
                         sx={{
-                            mt: 2,
+                            mt: 0,
+                            fontSize: "16px",
                             overflowWrap: "break-word",
                             color: "text.secondary",
                             overflow: "hidden",
@@ -147,41 +149,36 @@ export const ProductItem: React.FC<PropductItem> = ({
                             flex: 1,
                         }}
                     >
-                        {description}
+                        {title}
                     </Typography>
                 </Tooltip>
-                <Typography
-                    variant="h6"
-                    sx={{
-                        fontWeight: 700,
-                        color: "#999999",
-                        my: 1,
-                    }}
-                >{`#10000${id}`}</Typography>
-                <Tooltip title={`${price / 100}$`} placement="top">
-                    <Typography
-                        sx={{
-                            fontWeight: 500,
-                            fontSize: "24px",
-                            overflowWrap: "break-word",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            display: "-webkit-box",
-                        }}
-                    >{`${price / 100}$`}</Typography>
-                </Tooltip>
-                {updateStock && (
-                    <TextField
-                        type="number"
-                        margin="dense"
-                        size="small"
-                        value={product.stock || 0}
-                        onChange={(e) => {
-                            e.preventDefault();
-                            updateStock(parseInt(e.target.value, 10), product);
-                        }}
-                    />
-                )}
+                <div style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                }}>
+                    <Tooltip title={`${boxFile.no}`} placement="top">
+                        <Typography
+                            sx={{
+                                fontWeight: 500,
+                                fontSize: "20px",
+                                overflowWrap: "break-word",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                display: "-webkit-box",
+                            }}
+                        >{`File: ${boxFile.no}`}
+                        </Typography>
+                    </Tooltip>
+                    <div style={{ textAlign: "right" }}>
+                        <DateField sx={{
+                            fontWeight: 700,
+                            color: "#999999",
+                            my: 1,
+                            float: "right"
+                        }} align="right" value={createdAt} format="LL" />
+                    </div>
+                </div>
             </CardContent>
         </Card>
     );

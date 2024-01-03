@@ -1,8 +1,8 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const boxFileValidation = require('../../validations/box_file.validation');
-const boxFileController = require('../../controllers/box_file.controller');
+const { boxFileValidation } = require('../../validations');
+const { boxFileController } = require('../../controllers');
 
 const router = express.Router();
 

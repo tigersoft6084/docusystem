@@ -5,13 +5,15 @@ const catchAsync = require('../utils/catchAsync');
 const { boxFileService } = require('../services');
 
 const createBoxFile = catchAsync(async (req, res) => {
-  const boxFile = await boxFileService.createBoxFile(req.body);
+  req.body.company = req.user.company;
+  const boxFile = await boxFileService.createBoxFile(req.body, req.user.company);
   res.status(httpStatus.CREATED).send(boxFile);
 });
 
 const getBoxFiles = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['name', 'no']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  filter.company = req.user.company;
   const result = await boxFileService.queryBoxFiles(filter, options);
   res.send(result);
 });
@@ -25,7 +27,8 @@ const getBoxFile = catchAsync(async (req, res) => {
 });
 
 const updateBoxFile = catchAsync(async (req, res) => {
-  const boxFile = await boxFileService.updateBoxFileById(req.params.boxFileId, req.body);
+  console.log(req);
+  const boxFile = await boxFileService.updateBoxFileById(req.params.boxFileId, req.body, req.user.company);
   res.send(boxFile);
 });
 

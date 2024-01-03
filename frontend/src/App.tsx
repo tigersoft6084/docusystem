@@ -20,7 +20,7 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import FileOpenOutlinedIcon from '@mui/icons-material/FileOpenOutlined';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
-import LocalPizzaOutlined from "@mui/icons-material/LocalPizzaOutlined";
+import ComputerIcon from "@mui/icons-material/Computer";
 import PeopleOutlineOutlined from "@mui/icons-material/PeopleOutlineOutlined";
 import Dashboard from "@mui/icons-material/Dashboard";
 
@@ -33,9 +33,9 @@ import {
     CourierCreate,
     CourierEdit,
 } from "./pages/couriers";
-import { ProductList } from "./pages/products";
+import { DocumentList } from "./pages/documents";
 import { CompanyList } from "./pages/companies";
-import { CategoryList } from "./pages/categories";
+import { BoxFileList } from "./pages/box-files";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
 import { BikeWhiteIcon } from "./components/icons/bike-white";
@@ -101,8 +101,8 @@ const App: React.FC = () => {
                                     },
                                 },
                                 {
-                                    name: "categories",
-                                    list: "/files",
+                                    name: "box-files",
+                                    list: "/box-files",
                                     meta: {
                                         icon: <FolderOpenOutlinedIcon />,
                                     },
@@ -111,7 +111,7 @@ const App: React.FC = () => {
                                     name: "companies",
                                     list: "/companies",
                                     meta: {
-                                        icon: <FolderOpenOutlinedIcon />,
+                                        icon: <ComputerIcon />,
                                     },
                                 },
                                 {
@@ -152,12 +152,12 @@ const App: React.FC = () => {
 
                                     <Route
                                         path="/documents"
-                                        element={<ProductList />}
+                                        element={<DocumentList />}
                                     />
 
                                     <Route
-                                        path="/files"
-                                        element={<CategoryList />}
+                                        path="/box-files"
+                                        element={<BoxFileList />}
                                     />
 
                                     <Route

@@ -59,6 +59,11 @@ export const RegisterPage: React.FC = () => {
     const t = useTranslate();
     const { autocompleteProps } = useAutocomplete<ICompany>({
         resource: "companies",
+        onSearch: (value) => [{
+            field: "name",
+            operator: "contains",
+            value
+        }]
     });
     const authProvider = useActiveAuthProvider();
     const { mutate: registerMutate, isLoading } =

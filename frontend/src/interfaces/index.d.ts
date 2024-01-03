@@ -3,6 +3,15 @@ export interface ICompany {
     name: string;
 }
 
+export interface IDocument {
+    id: string;
+    name: string;
+    title: string;
+    images: IFile[];
+    createdAt: string;
+    boxFile: IBoxFile;
+}
+
 export interface IOrderChart {
     count: number;
     status:

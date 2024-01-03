@@ -5,8 +5,8 @@ const createDocument = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     title: Joi.string().required(),
-    photo: Joi.string().required().custom(imageUrl),
-    box_file: Joi.string().required().custom(objectId)
+    images: Joi.array().items(Joi.object()).min(1),
+    boxFile: Joi.object()
   }),
 };
 
@@ -35,7 +35,7 @@ const updateDocument = {
       name: Joi.string(),
       title: Joi.string().required(),
       photo: Joi.string().required().custom(imageUrl),
-      box_file: Joi.string().required().custom(objectId)
+      boxFile: Joi.object()
     })
     .min(1),
 };

@@ -25,6 +25,5 @@ export const generateFilter = (filters?: CrudFilters) => {
       }
     });
   }
-
   return queryFilters;
 };

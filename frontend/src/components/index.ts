@@ -6,3 +6,6 @@ export * from "./product";
 export * from "./user";
 export * from "./header";
 export * from "./title";
+export * from "./company";
+export * from "./box-file";
+export * from "./document";

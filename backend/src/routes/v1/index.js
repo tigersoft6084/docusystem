@@ -2,7 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const companyRoute = require('./company.route');
-const boxFileRoute = require('./box_file.route');
+const boxFileRoute = require('./box-file.route');
 const documentRoute = require('./document.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
@@ -23,7 +23,7 @@ const defaultRoutes = [
     route: companyRoute,
   },
   {
-    path: '/box_files',
+    path: '/box-files',
     route: boxFileRoute,
   },
   {

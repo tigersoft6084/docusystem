@@ -9,53 +9,59 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 
-import { ICategory } from "../../interfaces";
+import { IBoxFile } from "../../interfaces";
 
 type ProductItemProps = {
     setFilters: (filters: CrudFilters) => void;
     filters: CrudFilters;
 };
 
-export const CategoryFilter: React.FC<ProductItemProps> = ({
+export const BoxFileFilter: React.FC<ProductItemProps> = ({
     setFilters,
     filters,
 }) => {
     const t = useTranslate();
 
-    const [filterCategories, setFilterCategories] = useState<string[]>(
-        getDefaultFilter("category.id", filters, "in") ?? [],
+    const [filterBoxFiles, setFilterBoxFiles] = useState<string[]>(
+        getDefaultFilter("boxFile.id", filters, "in") ?? [],
     );
 
-    const { data: categories, isLoading } = useList<ICategory>({
-        resource: "categories",
+    const { data: boxFiles, isLoading } = useList<IBoxFile>({
+        resource: "box-files",
+        sorters: [
+            {
+                field: "no",
+                order: "asc"
+            }
+        ]
     });
 
     useEffect(() => {
         setFilters?.([
             {
-                field: "category.id",
+                field: "boxFile.id",
                 operator: "in",
                 value:
-                    filterCategories.length > 0 ? filterCategories : undefined,
+                    filterBoxFiles.length > 0 ? filterBoxFiles : undefined,
             },
         ]);
-    }, [filterCategories]);
+    }, [filterBoxFiles]);
 
-    const toggleFilterCategory = (clickedCategory: string) => {
-        const target = filterCategories.findIndex(
-            (category) => category === clickedCategory,
+    const toggleFilterBoxFile = (clickedBoxFile: string) => {
+        const target = filterBoxFiles.findIndex(
+            (boxFile) => boxFile === clickedBoxFile,
         );
 
         if (target < 0) {
-            setFilterCategories((prevCategories) => {
-                return [...prevCategories, clickedCategory];
+            setFilterBoxFiles((prevBoxFiles) => {
+                return [...prevBoxFiles, clickedBoxFile];
             });
         } else {
-            const copyFilterCategories = [...filterCategories];
+            const copyFilterBoxFiles = [...filterBoxFiles];
 
-            copyFilterCategories.splice(target, 1);
+            copyFilterBoxFiles.splice(target, 1);
 
-            setFilterCategories(copyFilterCategories);
+            setFilterBoxFiles(copyFilterBoxFiles);
         }
     };
 
@@ -64,9 +70,9 @@ export const CategoryFilter: React.FC<ProductItemProps> = ({
             <Grid container columns={6} marginTop="10px">
                 <Grid item p={0.5}>
                     <LoadingButton
-                        onClick={() => setFilterCategories([])}
+                        onClick={() => setFilterBoxFiles([])}
                         variant={
-                            filterCategories.length === 0
+                            filterBoxFiles.length === 0
                                 ? "contained"
                                 : "outlined"
                         }
@@ -79,12 +85,12 @@ export const CategoryFilter: React.FC<ProductItemProps> = ({
                         {t("stores.all")}
                     </LoadingButton>
                 </Grid>
-                {categories?.data.map((category: ICategory) => (
-                    <Grid item key={category.id} p={0.5}>
+                {boxFiles?.data.map((boxFile: IBoxFile) => (
+                    <Grid item key={boxFile.id} p={0.5}>
                         <LoadingButton
                             variant={
-                                filterCategories.includes(
-                                    category.id.toString(),
+                                filterBoxFiles.includes(
+                                    boxFile.id.toString(),
                                 )
                                     ? "contained"
                                     : "outlined"
@@ -95,10 +101,10 @@ export const CategoryFilter: React.FC<ProductItemProps> = ({
                                 borderRadius: "50px",
                             }}
                             onClick={() =>
-                                toggleFilterCategory(category.id.toString())
+                                toggleFilterBoxFile(boxFile.id.toString())
                             }
                         >
-                            {category.title}
+                            {boxFile.no}
                         </LoadingButton>
                     </Grid>
                 ))}

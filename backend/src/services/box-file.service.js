@@ -7,10 +7,10 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} boxFileBody
  * @returns {Promise<BoxFile>}
  */
-const createBoxFile = async (boxFileBody) => {
-  // if (await BoxFile.isEmailTaken(boxFileBody.email)) {
-  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-  // }
+const createBoxFile = async (boxFileBody, company) => {
+  if (await BoxFile.isNoTaken(boxFileBody.no, company)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Number already taken');
+  }
   return BoxFile.create(boxFileBody);
 };
 
@@ -24,6 +24,11 @@ const createBoxFile = async (boxFileBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryBoxFiles = async (filter, options) => {
+  if (filter.no !== undefined) {
+    if (filter.no === '') {
+      delete filter.no;
+    }
+  }
   const boxFiles = await BoxFile.paginate(filter, options);
   return boxFiles;
 };
@@ -43,12 +48,14 @@ const getBoxFileById = async (id) => {
  * @param {Object} updateBody
  * @returns {Promise<BoxFile>}
  */
-const updateBoxFileById = async (boxFileId, updateBody) => {
+const updateBoxFileById = async (boxFileId, updateBody, company) => {
   const boxFile = await getBoxFileById(boxFileId);
   if (!boxFile) {
     throw new ApiError(httpStatus.NOT_FOUND, 'BoxFile not found');
   }
-
+if (await BoxFile.isNoTaken(updateBody.no, company, boxFileId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Number already taken');
+  }
   Object.assign(boxFile, updateBody);
   await boxFile.save();
   return boxFile;

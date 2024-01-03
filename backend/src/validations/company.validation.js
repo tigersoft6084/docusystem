@@ -9,8 +9,7 @@ const createCompany = {
 
 const getCompanies = {
   query: Joi.object().keys({
-    name: Joi.string(),
-    title_like: Joi.string(),
+    name: Joi.string().allow(''),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),

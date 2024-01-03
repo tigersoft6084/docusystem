@@ -19,26 +19,26 @@ import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
 
 import {
-    CategoryFilter,
-    ProductItem,
-    CreateProduct,
-    EditProduct,
+    BoxFileFilter,
+    DocumentItem,
+    CreateDocument,
+    EditDocument,
 } from "../../components";
-import { IProduct, Nullable } from "../../interfaces";
+import { IDocument, Nullable } from "../../interfaces";
 
-export const ProductList: React.FC<IResourceComponentsProps> = () => {
+export const DocumentList: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
 
     const { tableQueryResult, setFilters, setCurrent, filters, pageCount } =
-        useTable<IProduct>({
-            resource: "products",
+        useTable<IDocument>({
+            resource: "documents",
             initialPageSize: 12,
         });
 
     const createDrawerFormProps = useModalForm<
-        IProduct,
+        IDocument,
         HttpError,
-        Nullable<IProduct>
+        Nullable<IDocument>
     >({
         refineCoreProps: { action: "create" },
     });
@@ -48,9 +48,9 @@ export const ProductList: React.FC<IResourceComponentsProps> = () => {
     } = createDrawerFormProps;
 
     const editDrawerFormProps = useModalForm<
-        IProduct,
+        IDocument,
         HttpError,
-        Nullable<IProduct>
+        Nullable<IDocument>
     >({
         refineCoreProps: { action: "edit" },
     });
@@ -59,12 +59,12 @@ export const ProductList: React.FC<IResourceComponentsProps> = () => {
         modal: { show: showEditDrawer },
     } = editDrawerFormProps;
 
-    const products: IProduct[] = tableQueryResult.data?.data || [];
+    const documents: IDocument[] = tableQueryResult.data?.data || [];
 
     return (
         <>
-            <CreateProduct {...createDrawerFormProps} />
-            <EditProduct {...editDrawerFormProps} />
+            <CreateDocument {...createDrawerFormProps} />
+            <EditDocument {...editDrawerFormProps} />
             <Paper
                 sx={{
                     paddingX: { xs: 3, md: 2 },
@@ -84,7 +84,7 @@ export const ProductList: React.FC<IResourceComponentsProps> = () => {
                             gap={2}
                         >
                             <Typography variant="h5">
-                                {t("products.products")}
+                                {t("documents.documents")}
                             </Typography>
                             <Paper
                                 component="form"
@@ -96,9 +96,9 @@ export const ProductList: React.FC<IResourceComponentsProps> = () => {
                             >
                                 <InputBase
                                     sx={{ ml: 1, flex: 1 }}
-                                    placeholder={t("stores.productSearch")}
+                                    placeholder={t("stores.documentSearch")}
                                     inputProps={{
-                                        "aria-label": "product search",
+                                        "aria-label": "document search",
                                     }}
                                     value={getDefaultFilter(
                                         "name",
@@ -133,23 +133,23 @@ export const ProductList: React.FC<IResourceComponentsProps> = () => {
                                 variant="outlined"
                                 sx={{ marginBottom: "5px" }}
                             >
-                                {t("stores.buttons.addProduct")}
+                                {t("stores.buttons.addDocument")}
                             </CreateButton>
                         </Stack>
                         <Grid container>
-                            {products.length > 0 ? (
-                                products.map((product: IProduct) => (
+                            {documents.length > 0 ? (
+                                documents.map((document: IDocument) => (
                                     <Grid
                                         item
                                         xs={12}
                                         md={6}
                                         lg={4}
                                         xl={3}
-                                        key={product.id}
+                                        key={document.id}
                                         sx={{ padding: "8px" }}
                                     >
-                                        <ProductItem
-                                            product={product}
+                                        <DocumentItem
+                                            document={document}
                                             show={showEditDrawer}
                                         />
                                     </Grid>
@@ -161,7 +161,7 @@ export const ProductList: React.FC<IResourceComponentsProps> = () => {
                                     padding={3}
                                 >
                                     <Typography variant="body2">
-                                        {t("products.noProducts")}
+                                        {t("documents.noDocuments")}
                                     </Typography>
                                 </Grid>
                             )}
@@ -200,7 +200,7 @@ export const ProductList: React.FC<IResourceComponentsProps> = () => {
                             <Typography variant="subtitle1">
                                 {t("stores.tagFilterDescription")}
                             </Typography>
-                            <CategoryFilter
+                            <BoxFileFilter
                                 setFilters={setFilters}
                                 filters={filters}
                             />

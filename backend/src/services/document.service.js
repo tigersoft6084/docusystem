@@ -11,6 +11,9 @@ const createDocument = async (documentBody) => {
   // if (await Document.isEmailTaken(documentBody.email)) {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
+  if (documentBody.boxFile) {
+    documentBody.boxFile = documentBody.boxFile.id;
+  }
   return Document.create(documentBody);
 };
 
@@ -24,6 +27,7 @@ const createDocument = async (documentBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryDocuments = async (filter, options) => {
+  options.populate = "boxFile";
   const documents = await Document.paginate(filter, options);
   return documents;
 };
@@ -48,7 +52,9 @@ const updateDocumentById = async (documentId, updateBody) => {
   if (!document) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
   }
-
+  if (updateBody.boxFile) {
+    updateBody.boxFile = updateBody.boxFile.id;
+  }
   Object.assign(document, updateBody);
   await document.save();
   return document;

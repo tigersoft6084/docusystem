@@ -38,7 +38,7 @@ const updateUser = {
       email: Joi.string().email(),
       password: Joi.string().custom(password),
       name: Joi.string(),
-      company: Joi.string().custom(objectId).required(),
+      company: Joi.object(),//Joi.string().custom(objectId).required(),
       role: Joi.string().required().valid('user', 'admin'),
       isActive: Joi.boolean().required(),
       isEmailVerified: Joi.boolean().required()

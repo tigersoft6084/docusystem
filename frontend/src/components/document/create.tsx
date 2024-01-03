@@ -1,16 +1,15 @@
 import React from "react";
 import axios from "axios";
 import { useTranslate, useApiUrl, HttpError } from "@refinedev/core";
-import { useAutocomplete, Edit } from "@refinedev/mui";
 import { UseModalFormReturnType } from "@refinedev/react-hook-form";
 import { Controller } from "react-hook-form";
+import { Create, useAutocomplete } from "@refinedev/mui";
 
 import Drawer from "@mui/material/Drawer";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Input from "@mui/material/Input";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import FormLabel from "@mui/material/FormLabel";
@@ -18,17 +17,18 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import FormControl from "@mui/material/FormControl";
+import Autocomplete from "@mui/material/Autocomplete";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormHelperText from "@mui/material/FormHelperText";
-import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
-import CloseIcon from "@mui/icons-material/Close";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
-import { ICategory, IFile, IProduct, Nullable } from "../../interfaces";
+import { IBoxFile, IFile, IDocument, Nullable } from "../../interfaces";
 
-export const EditProduct: React.FC<
-    UseModalFormReturnType<IProduct, HttpError, Nullable<IProduct>>
+export const CreateDocument: React.FC<
+    UseModalFormReturnType<IDocument, HttpError, Nullable<IDocument>>
 > = ({
     watch,
     setValue,
@@ -39,14 +39,24 @@ export const EditProduct: React.FC<
     handleSubmit,
     modal: { visible, close },
     saveButtonProps,
-    getValues,
 }) => {
     const t = useTranslate();
 
     const apiUrl = useApiUrl();
 
-    const { autocompleteProps } = useAutocomplete<ICategory>({
-        resource: "categories",
+    const { autocompleteProps } = useAutocomplete<IBoxFile>({
+        resource: "box-files",
+        onSearch: (value) => [{
+            field: "no",
+            operator: "contains",
+            value
+        }],
+        sorters: [
+            {
+                field: 'no',
+                order: 'asc'
+            }
+        ]
     });
 
     const imageInput = watch("images");
@@ -79,7 +89,6 @@ export const EditProduct: React.FC<
             {
                 name,
                 size,
-                type,
                 lastModified,
                 url: res.data.url,
             },
@@ -96,15 +105,19 @@ export const EditProduct: React.FC<
             onClose={close}
             anchor="right"
         >
-            <Edit
+            <Create
                 saveButtonProps={saveButtonProps}
                 headerProps={{
                     avatar: (
                         <IconButton
                             onClick={() => close()}
-                            sx={{ width: "30px", height: "30px", mb: "5px" }}
+                            sx={{
+                                width: "30px",
+                                height: "30px",
+                                mb: "5px",
+                            }}
                         >
-                            <CloseIcon />
+                            <CloseOutlined />
                         </IconButton>
                     ),
                     action: null,
@@ -113,9 +126,9 @@ export const EditProduct: React.FC<
             >
                 <Stack>
                     <Box
+                        paddingX="50px"
                         justifyContent="center"
                         alignItems="center"
-                        marginBottom="50px"
                         sx={{
                             paddingX: {
                                 xs: 1,
@@ -126,7 +139,7 @@ export const EditProduct: React.FC<
                         <form onSubmit={handleSubmit(onFinish)}>
                             <FormControl sx={{ width: "100%" }}>
                                 <FormLabel required>
-                                    {t("products.fields.images.label")}
+                                    {t("documents.fields.images.label")}
                                 </FormLabel>
                                 <Stack
                                     display="flex"
@@ -169,25 +182,28 @@ export const EditProduct: React.FC<
                                                 },
                                             }}
                                             src={
-                                                (imageInput as IFile[]) &&
-                                                (imageInput as IFile[])[0].url
+                                                apiUrl + '/uploads/' + (
+                                                    (imageInput as IFile[]) &&
+                                                    ((imageInput as IFile[])[0]
+                                                        .url as string)
+                                                )
                                             }
-                                            alt="Store Location"
+                                            alt="Document Scanned Image"
                                         />
                                     </label>
                                     <Typography
                                         variant="body2"
-                                        sx={{
+                                        style={{
                                             fontWeight: 800,
                                             marginTop: "8px",
                                         }}
                                     >
                                         {t(
-                                            "products.fields.images.description",
+                                            "documents.fields.images.title",
                                         )}
                                     </Typography>
                                     <Typography style={{ fontSize: "12px" }}>
-                                        {t("products.fields.images.validation")}
+                                        {t("documents.fields.images.validation")}
                                     </Typography>
                                 </Stack>
                                 {errors.images && (
@@ -199,7 +215,7 @@ export const EditProduct: React.FC<
                             <Stack gap="10px" marginTop="10px">
                                 <FormControl>
                                     <FormLabel required>
-                                        {t("products.fields.name")}
+                                        {t("documents.fields.name")}
                                     </FormLabel>
                                     <OutlinedInput
                                         id="name"
@@ -219,11 +235,11 @@ export const EditProduct: React.FC<
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel required>
-                                        {t("products.fields.description")}
+                                        {t("documents.fields.title")}
                                     </FormLabel>
                                     <OutlinedInput
-                                        id="description"
-                                        {...register("description", {
+                                        id="title"
+                                        {...register("title", {
                                             required: t(
                                                 "errors.required.field",
                                                 { field: "Description" },
@@ -233,53 +249,22 @@ export const EditProduct: React.FC<
                                         minRows={5}
                                         maxRows={5}
                                     />
-                                    {errors.description && (
+                                    {errors.title && (
                                         <FormHelperText error>
-                                            {errors.description.message}
+                                            {errors.title.message}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
                                 <FormControl>
-                                    <FormLabel required>
-                                        {t("products.fields.price")}
-                                    </FormLabel>
-                                    <OutlinedInput
-                                        id="price"
-                                        {...register("price", {
-                                            required: t(
-                                                "errors.required.field",
-                                                { field: "Price" },
-                                            ),
-                                        })}
-                                        style={{
-                                            width: "150px",
-                                            height: "40px",
-                                        }}
-                                        type="number"
-                                        startAdornment={
-                                            <InputAdornment position="start">
-                                                $
-                                            </InputAdornment>
-                                        }
-                                    />
-                                    {errors.price && (
-                                        <FormHelperText error>
-                                            {errors.price.message}
-                                        </FormHelperText>
-                                    )}
-                                </FormControl>
-                                <FormControl sx={{ marginTop: "10px" }}>
                                     <Controller
                                         control={control}
-                                        name="category"
+                                        name="boxFile"
                                         rules={{
                                             required: t(
                                                 "errors.required.field",
-                                                { field: "Category" },
+                                                { field: "BoxFile" },
                                             ),
                                         }}
-                                        // eslint-disable-next-line
-                                        defaultValue={null as any}
                                         render={({ field }) => (
                                             <Autocomplete
                                                 disablePortal
@@ -289,13 +274,9 @@ export const EditProduct: React.FC<
                                                     field.onChange(value);
                                                 }}
                                                 getOptionLabel={(item) => {
-                                                    return item.title
-                                                        ? item.title
-                                                        : autocompleteProps?.options?.find(
-                                                              (p) =>
-                                                                  p.id.toString() ===
-                                                                  item.toString(),
-                                                          )?.title ?? "";
+                                                    return item.no
+                                                        ? `${item.no}`
+                                                        : "";
                                                 }}
                                                 isOptionEqualToValue={(
                                                     option,
@@ -310,10 +291,10 @@ export const EditProduct: React.FC<
                                                 renderInput={(params) => (
                                                     <TextField
                                                         {...params}
-                                                        label="Category"
+                                                        label="BoxFile"
                                                         variant="outlined"
                                                         error={
-                                                            !!errors.category
+                                                            !!errors.boxFile
                                                                 ?.message
                                                         }
                                                         required
@@ -322,68 +303,9 @@ export const EditProduct: React.FC<
                                             />
                                         )}
                                     />
-                                    {errors.category && (
+                                    {errors.boxFile && (
                                         <FormHelperText error>
-                                            {errors.category.message}
-                                        </FormHelperText>
-                                    )}
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel required>
-                                        {t("products.fields.isActive")}
-                                    </FormLabel>
-                                    <Controller
-                                        control={control}
-                                        {...register("isActive")}
-                                        defaultValue={false}
-                                        render={({ field }) => {
-                                            return (
-                                                <RadioGroup
-                                                    id="isActive"
-                                                    defaultValue={getValues(
-                                                        "isActive",
-                                                    )}
-                                                    {...field}
-                                                    onChange={(event) => {
-                                                        const value =
-                                                            event.target
-                                                                .value ===
-                                                            "true";
-
-                                                        setValue(
-                                                            "isActive",
-                                                            value,
-                                                            {
-                                                                shouldValidate:
-                                                                    true,
-                                                            },
-                                                        );
-
-                                                        return value;
-                                                    }}
-                                                    row
-                                                >
-                                                    <FormControlLabel
-                                                        value={true}
-                                                        control={<Radio />}
-                                                        label={t(
-                                                            "status.enable",
-                                                        )}
-                                                    />
-                                                    <FormControlLabel
-                                                        value={false}
-                                                        control={<Radio />}
-                                                        label={t(
-                                                            "status.disable",
-                                                        )}
-                                                    />
-                                                </RadioGroup>
-                                            );
-                                        }}
-                                    />
-                                    {errors.isActive && (
-                                        <FormHelperText error>
-                                            {errors.isActive.message}
+                                            {errors.boxFile.message}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
@@ -391,7 +313,7 @@ export const EditProduct: React.FC<
                         </form>
                     </Box>
                 </Stack>
-            </Edit>
+            </Create>
         </Drawer>
     );
 };

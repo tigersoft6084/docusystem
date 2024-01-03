@@ -1,4 +1,6 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -52,6 +54,24 @@ if (config.env === 'production') {
 
 // v1 api routes
 app.use('/v1', routes);
+
+//Media upload handling
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // The directory where uploaded files will be stored
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original file name
+  },
+});
+
+app.use('/v1/uploads', express.static(path.join(__dirname, '../uploads')));
+const upload = multer({ storage: storage });
+
+app.post('/v1/media/upload', upload.single('file'), (req, res) => {
+  console.log(req.file)
+  res.json({ url: req.file.filename });
+});
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

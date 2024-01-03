@@ -27,6 +27,12 @@ const boxFileSchema = mongoose.Schema(
 boxFileSchema.plugin(toJSON);
 boxFileSchema.plugin(paginate);
 
+boxFileSchema.statics.isNoTaken = async function (no, company, excludeBoxFileId) {
+  console.log(no, company, excludeBoxFileId);
+  const boxFile = await this.findOne({ no, company, _id: { $ne: excludeBoxFileId } });
+  return !!boxFile;
+};
+
 /**
  * @typedef BoxFile
  */
