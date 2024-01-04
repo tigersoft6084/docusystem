@@ -23,7 +23,10 @@ axiosInstance.interceptors.response.use(
       message: error.response?.data?.message,
       statusCode: error.response?.status,
     };
-
+    if (error.response.status == 401) {//Authorization needed
+      localStorage.removeItem(TOKEN_KEY);
+      window.location.reload();
+    }
     return Promise.reject(customError);
   }
 );

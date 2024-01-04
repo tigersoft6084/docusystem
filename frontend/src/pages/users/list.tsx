@@ -1,6 +1,6 @@
 import React from "react";
 import { useModalForm } from "@refinedev/react-hook-form";
-import { CreateButton, EditButton } from "@refinedev/mui";
+import { CreateButton, DeleteButton, EditButton } from "@refinedev/mui";
 import Paper from "@mui/material/Paper";
 import {
     HttpError,
@@ -58,10 +58,19 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 flex: 1,
             },
             {
+                field: "company",
+                headerName: t("users.fields.company"),
+                minWidth: 150,
+                valueGetter: ({ row }) =>
+                    row.company.name,
+                flex: 1,
+            },
+            {
                 field: "role",
                 headerName: t("users.fields.role.label"),
                 valueGetter: ({ row }) =>
                     t(`users.fields.role.${row.role}`),
+                flex: 1,
             },
             {
                 field: "isEmailVerified",
@@ -82,6 +91,24 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 flex: 0.5,
             },
             {
+                field: "isActive",
+                headerName: t("users.fields.isActive.label"),
+                align: "center",
+                headerAlign: "center",
+                renderCell: function render({ row }) {
+                    return (
+                        <BooleanField
+                            svgIconProps={{
+                                sx: { width: "16px", height: "16px" },
+                            }}
+                            value={row.isActive}
+                        />
+                    );
+                },
+                minWidth: 80,
+                flex: 0.5,
+            },
+            {
                 field: "createdAt",
                 headerName: t("users.fields.createdAt"),
                 renderCell: function render({ row }) {
@@ -95,12 +122,19 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 headerName: t("table.actions"),
                 renderCell: function render({ row }) {
                     return (
-                        <EditButton
-                            size="small"
-                            hideText
-                            onClick={()=>showEditDrawer(row.id)}
-                            recordItemId={row.id}
-                        />
+                        <>
+                            <EditButton
+                                size="small"
+                                hideText
+                                onClick={() => showEditDrawer(row.id)}
+                                recordItemId={row.id}
+                            />
+                            <DeleteButton
+                                hideText
+                                recordItemId={row.id}
+                            />
+                        </>
+
                     );
                 },
                 align: "center",

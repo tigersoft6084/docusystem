@@ -82,7 +82,7 @@ export const BoxFileFilter: React.FC<ProductItemProps> = ({
                             borderRadius: "50px",
                         }}
                     >
-                        {t("stores.all")}
+                        {t("boxFiles.all")}
                     </LoadingButton>
                 </Grid>
                 {boxFiles?.data.map((boxFile: IBoxFile) => (

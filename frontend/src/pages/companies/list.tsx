@@ -1,6 +1,6 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { HttpError, useTranslate } from "@refinedev/core";
-import { EditButton, List, useDataGrid } from "@refinedev/mui";
+import { DeleteButton, EditButton, List, useDataGrid } from "@refinedev/mui";
 import { useModalForm } from "@refinedev/react-hook-form";
 import React from "react";
 
@@ -38,10 +38,16 @@ export const CompanyList: React.FC = () => {
                 headerName: "Actions",
                 renderCell: function render({ row }) {
                     return (
-                        <EditButton
-                            hideText
-                            onClick={() => showEditModal(row.id)}
-                        />
+                        <>
+                            <EditButton
+                                hideText
+                                onClick={() => showEditModal(row.id)}
+                            />
+                            <DeleteButton
+                                hideText
+                                recordItemId={row.id}
+                            />
+                        </>
                     );
                 },
                 align: "center",

@@ -31,6 +31,7 @@ import { BoxFileList } from "./pages/box-files";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
 import { AuthPage, RegisterPage } from "./pages/auth";
+import { accessControlProvider } from "./acessControlProvider";
 
 const App: React.FC = () => {
     // This hook is used to automatically login the user.
@@ -60,6 +61,7 @@ const App: React.FC = () => {
                             routerProvider={routerProvider}
                             dataProvider={dataProvider(SERVER_URL)}
                             authProvider={authProvider}
+                            accessControlProvider={accessControlProvider}
                             i18nProvider={i18nProvider}
                             options={{
                                 syncWithLocation: true,
@@ -151,12 +153,7 @@ const App: React.FC = () => {
                                         element={
                                             <AuthPage
                                                 type="login"
-                                                formProps={{
-                                                    defaultValues: {
-                                                        email: "demo@refine.dev",
-                                                        password: "demodemo",
-                                                    },
-                                                }}
+                                                
                                             />
                                         }
                                     />

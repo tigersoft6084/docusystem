@@ -17,7 +17,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { IDocument } from "../../interfaces";
-import { DateField } from "@refinedev/mui";
+import { DateField, DeleteButton } from "@refinedev/mui";
 
 type DocumentItem = {
     document: IDocument;
@@ -85,8 +85,9 @@ export const DocumentItem: React.FC<DocumentItem> = ({
                                     padding: "5px 10px",
                                 }}
                             >
-                                {t("stores.buttons.edit")}
+                                {t("documents.buttons.edit")}
                             </Button>
+                            <DeleteButton title={t("documents.buttons.delete")} recordItemId={id}/>
                         </Popover>
                     </Box>
                 }
@@ -117,8 +118,8 @@ export const DocumentItem: React.FC<DocumentItem> = ({
                 <CardMedia
                     component="img"
                     sx={{
-                        width: { xs: 60, sm: 84, lg: 108, xl: 144 },
-                        height: { xs: 60, sm: 84, lg: 108, xl: 144 },
+                        width: { xs: 84, sm: 120, lg: 180, xl: 240 },
+                        height: { xs: 84, sm: 120, lg: 180, xl: 240 },
                         borderRadius: "10%",
                     }}
                     alt={name}

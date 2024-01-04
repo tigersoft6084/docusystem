@@ -198,7 +198,7 @@ export const DocumentList: React.FC<IResourceComponentsProps> = () => {
                     >
                         <Stack padding="8px">
                             <Typography variant="subtitle1">
-                                {t("stores.tagFilterDescription")}
+                                {t("boxFiles.tagFilterDescription")}
                             </Typography>
                             <BoxFileFilter
                                 setFilters={setFilters}

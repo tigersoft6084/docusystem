@@ -1,6 +1,6 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { HttpError, useTranslate } from "@refinedev/core";
-import { EditButton, List, useDataGrid } from "@refinedev/mui";
+import { DeleteButton, EditButton, List, useDataGrid } from "@refinedev/mui";
 import { useModalForm } from "@refinedev/react-hook-form";
 import React from "react";
 
@@ -39,17 +39,23 @@ export const BoxFileList: React.FC = () => {
 
     const columns = React.useMemo<GridColDef<IBoxFile>[]>(
         () => [
-            { field: "no", headerName: t("boxFile.fields.no"), minWidth: 100, flex: 1 },
-            { field: "name", headerName: t("boxFile.fields.name"), minWidth: 400, flex: 2 },
+            { field: "no", headerName: t("boxFiles.fields.no"), minWidth: 100, flex: 1 },
+            { field: "name", headerName: t("boxFiles.fields.name"), minWidth: 400, flex: 2 },
             {
                 field: "actions",
                 headerName: "Actions",
                 renderCell: function render({ row }) {
                     return (
-                        <EditButton
-                            hideText
-                            onClick={() => showEditModal(row.id)}
-                        />
+                        <>
+                            <EditButton
+                                hideText
+                                onClick={() => showEditModal(row.id)}
+                            />
+                            <DeleteButton
+                                hideText
+                                recordItemId={row.id}
+                            />
+                        </>
                     );
                 },
                 align: "center",

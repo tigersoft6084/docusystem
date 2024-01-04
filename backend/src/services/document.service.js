@@ -7,13 +7,14 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} documentBody
  * @returns {Promise<Document>}
  */
-const createDocument = async (documentBody) => {
+const createDocument = async (documentBody, company) => {
   // if (await Document.isEmailTaken(documentBody.email)) {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   // }
   if (documentBody.boxFile) {
     documentBody.boxFile = documentBody.boxFile.id;
   }
+  documentBody.company = company;
   return Document.create(documentBody);
 };
 
@@ -26,7 +27,7 @@ const createDocument = async (documentBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryDocuments = async (filter, options) => {
+const queryDocuments = async (filter, options, company) => {
   options.populate = "boxFile";
   const {q, boxFile} = filter;
   if (q !== undefined) {
@@ -52,7 +53,7 @@ const queryDocuments = async (filter, options) => {
   if (boxFile !== undefined) {
     filter.boxFile = boxFile.split(",");
   }
-  console.log(filter);
+  if (company !== undefined) filter.company = company;
   const documents = await Document.paginate(filter, options);
   return documents;
 };
@@ -63,7 +64,7 @@ const queryDocuments = async (filter, options) => {
  * @returns {Promise<Document>}
  */
 const getDocumentById = async (id) => {
-  return Document.findById(id);
+  return Document.findById(id).populate('boxFile');
 };
 
 /**

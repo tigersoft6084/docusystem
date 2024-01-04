@@ -27,6 +27,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { ICompany, IUser, Nullable } from "../../interfaces";
 import { MenuItem, Select } from "@mui/material";
+import zIndex from "@mui/material/styles/zIndex";
 
 export const EditUser: React.FC<
     UseModalFormReturnType<IUser, HttpError, Nullable<IUser>>
@@ -173,7 +174,7 @@ export const EditUser: React.FC<
                                                     renderInput={(params) => (
                                                         <TextField
                                                             {...params}
-                                                            label="Company"
+                                                            label={t("users.fields.company")}
                                                             variant="outlined"
                                                             error={
                                                                 !!errors.company
@@ -220,6 +221,15 @@ export const EditUser: React.FC<
                                                         "user",
                                                         "admin",
                                                     ]}
+                                                    renderOption={(props, option) => {
+                                                        return (
+                                                            <li {...props} style={{zIndex: 10000}}>
+                                                                <div>
+                                                                    {option}
+                                                                </div>
+                                                            </li>
+                                                        );
+                                                    }}
                                                     renderInput={(
                                                         params,
                                                     ) => (
@@ -280,14 +290,14 @@ export const EditUser: React.FC<
                                                             value={true}
                                                             control={<Radio />}
                                                             label={t(
-                                                                "status.enable",
+                                                                "status.verified",
                                                             )}
                                                         />
                                                         <FormControlLabel
                                                             value={false}
                                                             control={<Radio />}
                                                             label={t(
-                                                                "status.disable",
+                                                                "status.not_verified",
                                                             )}
                                                         />
                                                     </RadioGroup>

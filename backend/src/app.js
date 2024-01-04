@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -61,7 +62,10 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/'); // The directory where uploaded files will be stored
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname); // Use the original file name
+    const randomFilename = uuidv4();
+    const fileExtension = file.originalname.split('.').pop();
+    cb(null, `${randomFilename}.${fileExtension}`);
+    // cb(null, file.originalname); // Use the original file name
   },
 });
 

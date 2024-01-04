@@ -28,6 +28,11 @@ const documentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'BoxFile',
       required: true,
+    },
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'company',
+      required: true,
     }
   },
   {

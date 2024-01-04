@@ -28,7 +28,7 @@ const queryCompanies = async (filter, options) => {
     if (filter.name === '') delete filter.name;
     else {
       const regex = new RegExp(filter.name, 'i');
-      filter.name = {$regex: regex}  
+      filter.name = {$regex: regex}
     }
   }
   const companies = await Company.paginate(filter, options);

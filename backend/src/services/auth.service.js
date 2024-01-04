@@ -16,6 +16,9 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
+  if (!user.isActive) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not activated. Contact Admin to activate.');
+  }
   return user;
 };
 

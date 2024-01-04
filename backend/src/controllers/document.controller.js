@@ -5,16 +5,14 @@ const catchAsync = require('../utils/catchAsync');
 const { documentService } = require('../services');
 
 const createDocument = catchAsync(async (req, res) => {
-  const document = await documentService.createDocument(req.body);
+  const document = await documentService.createDocument(req.body, req.user.company);
   res.status(httpStatus.CREATED).send(document);
 });
 
 const getDocuments = catchAsync(async (req, res) => {
-  console.log("query");
-  console.log(req.query);
   const filter = pick(req.query, ['name', 'title', 'q', 'boxFile']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await documentService.queryDocuments(filter, options);
+  const result = await documentService.queryDocuments(filter, options, req.user.company);
   res.send(result);
 });
 

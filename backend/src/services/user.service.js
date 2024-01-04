@@ -24,6 +24,7 @@ const createUser = async (userBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryUsers = async (filter, options) => {
+  options.populate = 'company';
   const users = await User.paginate(filter, options);
   return users;
 };
@@ -34,7 +35,7 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  return User.findById(id);
+  return User.findById(id).populate('company');
 };
 
 /**

@@ -1,4 +1,4 @@
-import { AuthBindings } from "@refinedev/core";
+import { AuthBindings, HttpError } from "@refinedev/core";
 import axios from "axios";
 export const TOKEN_KEY = "auth";
 export const API_URL = "https://api.finefoods.refine.dev";
@@ -25,7 +25,7 @@ export const authProvider: AuthBindings = {
                 success: false,
                 error: {
                     message: "Login failed",
-                    name: "Incorrect email or password"
+                    name: error.response?.data?.message
                 }
             }
         }
@@ -50,6 +50,7 @@ export const authProvider: AuthBindings = {
             await authProvider.login({ email, password });
             return {
                 success: true,
+                redirectTo: "/documents",
             };
         } catch (error) {
             return {

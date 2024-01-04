@@ -108,7 +108,9 @@
     },
     "status": {
         "enable": "Enable",
-        "disable": "Disable"
+        "disable": "Disable",
+        "verified": "Verified",
+        "not_verified": "Not verified"
     },
     "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
     "notifications": {
@@ -134,6 +136,20 @@
             "id": "ID",
             "name": "Name"
         }
+    },
+    "boxFiles": {
+        "boxFiles": "Box Files",
+        "titles": {
+            "list": "Box Files",
+            "edit": "Edit Box File",
+            "create": "Create Box File"
+        },
+        "fields": {
+            "no": "No",
+            "name": "Name"
+        },
+        "all": "All",
+        "tagFilterDescription": "Select box files to filter your search"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -205,7 +221,9 @@
         },
         "search": "Search",
         "buttons": {
-            "addDocument": "Add Document"
+            "addDocument": "Add Document",
+            "edit": "Edit Document",
+            "delete": "Delete Document"
         }
     },
     "users": {
@@ -228,14 +246,7 @@
                 "user": "User"
             },
             "name": "Name",
-            "firstName": "First Name",
-            "lastName": "Last Name",
-            "gender": {
-                "label": "Gender",
-                "Male": "Male",
-                "Female": "Female"
-            },
-            "gsm": "Gsm Number",
+            "company": "Company",
             "createdAt": "CreatedAt",
             "isActive": {
                 "label": "Active",

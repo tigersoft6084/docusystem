@@ -45,7 +45,7 @@ export const CreateBoxFileModal: React.FC<
                         helperText={errors.no?.message}
                         margin="normal"
                         fullWidth
-                        label={t("boxFile.fields.no")}
+                        label={t("boxFiles.fields.no")}
                         name="no"
                     />
                     <TextField
@@ -57,7 +57,7 @@ export const CreateBoxFileModal: React.FC<
                         helperText={errors.name?.message}
                         margin="normal"
                         fullWidth
-                        label={t("boxFile.fields.name")}
+                        label={t("boxFiles.fields.name")}
                         name="name"
                     />
                 </Box>
