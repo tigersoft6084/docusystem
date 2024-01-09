@@ -208,6 +208,7 @@ export const EditUser: React.FC<
                                             defaultValue={null as any}
                                             render={({ field }) => (
                                                 <Autocomplete
+                                                    disablePortal
                                                     {...field}
                                                     onChange={(
                                                         _,
@@ -221,15 +222,6 @@ export const EditUser: React.FC<
                                                         "user",
                                                         "admin",
                                                     ]}
-                                                    renderOption={(props, option) => {
-                                                        return (
-                                                            <li {...props} style={{zIndex: 10000}}>
-                                                                <div>
-                                                                    {option}
-                                                                </div>
-                                                            </li>
-                                                        );
-                                                    }}
                                                     renderInput={(
                                                         params,
                                                     ) => (

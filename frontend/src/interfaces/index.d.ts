@@ -59,8 +59,9 @@ export interface IBoxFile {
 
 export interface IIdentity {
     id: number;
+    name: string;
     email: string;
-    roles: string[];
+    role: string;
 }
 
 export interface IAddress {
