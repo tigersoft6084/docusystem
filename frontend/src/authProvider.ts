@@ -2,7 +2,7 @@ import { AuthBindings, HttpError } from "@refinedev/core";
 import axios from "axios";
 export const TOKEN_KEY = "auth";
 export const API_URL = "https://api.finefoods.refine.dev";
-export const SERVER_URL = "http://localhost:8080/v1";
+export const SERVER_URL = "http://178.16.143.111:8080/v1";
 
 export const authProvider: AuthBindings = {
     login: async ({ email, password }) => {
