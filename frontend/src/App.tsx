@@ -16,7 +16,7 @@ import routerProvider, {
     UnsavedChangesNotifier,
     DocumentTitleHandler,
 } from "@refinedev/react-router-v6";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import FileOpenOutlinedIcon from '@mui/icons-material/FileOpenOutlined';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
@@ -118,6 +118,7 @@ const App: React.FC = () => {
                                         </Authenticated>
                                     }
                                 >
+                                    <Route index element={<Navigate to="/documents"/>} />
                                     <Route path="/users">
                                         <Route index element={<UserList />} />
                                     </Route>
@@ -144,7 +145,7 @@ const App: React.FC = () => {
                                             key="auth-pages"
                                             fallback={<Outlet />}
                                         >
-                                            <NavigateToResource resource="dashboard" />
+                                            <NavigateToResource resource="document" />
                                         </Authenticated>
                                     }
                                 >
