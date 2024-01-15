@@ -72,9 +72,8 @@ const storage = multer.diskStorage({
 app.use('/v1/uploads', express.static(path.join(__dirname, '../uploads')));
 const upload = multer({ storage: storage });
 
-app.post('/v1/media/upload', upload.single('file'), (req, res) => {
-  console.log(req.file)
-  res.json({ url: req.file.filename });
+app.post('/v1/media/upload', upload.array('file'), (req, res) => {
+  res.json({ url: req.files.map(file => file.filename) });
 });
 
 // send back a 404 error for any unknown api request

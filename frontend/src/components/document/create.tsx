@@ -40,280 +40,305 @@ export const CreateDocument: React.FC<
     modal: { visible, close },
     saveButtonProps,
 }) => {
-    const t = useTranslate();
+        const t = useTranslate();
 
-    const apiUrl = useApiUrl();
+        const apiUrl = useApiUrl();
 
-    const { autocompleteProps } = useAutocomplete<IBoxFile>({
-        resource: "box-files",
-        onSearch: (value) => [{
-            field: "no",
-            operator: "contains",
-            value
-        }],
-        sorters: [
-            {
-                field: 'no',
-                order: 'asc'
+        const { autocompleteProps } = useAutocomplete<IBoxFile>({
+            resource: "box-files",
+            onSearch: (value) => [{
+                field: "no",
+                operator: "contains",
+                value
+            }],
+            sorters: [
+                {
+                    field: 'no',
+                    order: 'asc'
+                }
+            ]
+        });
+
+        const imageInput = watch("images");
+
+        const onChangeHandler = async (
+            event: React.ChangeEvent<HTMLInputElement>,
+        ) => {
+            const formData = new FormData();
+
+            const files = event.target.files ?? [];
+            for (let i = 0; i < files.length; i++) {
+                const file: File = files[i];
+                formData.append("file", file);
             }
-        ]
-    });
 
-    const imageInput = watch("images");
-
-    const onChangeHandler = async (
-        event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        const formData = new FormData();
-
-        const target = event.target;
-        const file: File = (target.files as FileList)[0];
-
-        formData.append("file", file);
-
-        const res = await axios.post<{ url: string }>(
-            `${apiUrl}/media/upload`,
-            formData,
-            {
-                withCredentials: false,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
+            const res = await axios.post<{ url: string }>(
+                `${apiUrl}/media/upload`,
+                formData,
+                {
+                    withCredentials: false,
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                    },
                 },
-            },
-        );
+            );
 
-        const { name, size, type, lastModified } = file;
 
-        // eslint-disable-next-line
-        const imagePaylod: any = [
-            {
-                name,
-                size,
-                lastModified,
-                url: res.data.url,
-            },
-        ];
+            const imagePayload: any = [];
+            for (let i = 0; i < files.length; i++) {
+                const { name, size, type, lastModified } = files[i];
+                imagePayload.push(
+                    {
+                        name,
+                        size,
+                        lastModified,
+                        url: res.data.url[i],
+                    },
+                )
+            }
+            console.log(imagePayload);
+            setValue("images", imagePayload, { shouldValidate: true });
+        };
 
-        setValue("images", imagePaylod, { shouldValidate: true });
-    };
-
-    return (
-        <Drawer
-            sx={{ zIndex: "1301" }}
-            PaperProps={{ sx: { width: { sm: "100%", md: 500 } } }}
-            open={visible}
-            onClose={close}
-            anchor="right"
-        >
-            <Create
-                saveButtonProps={saveButtonProps}
-                headerProps={{
-                    avatar: (
-                        <IconButton
-                            onClick={() => close()}
+        return (
+            <Drawer
+                sx={{ zIndex: "1301" }}
+                PaperProps={{ sx: { width: { sm: "100%", md: 500 } } }}
+                open={visible}
+                onClose={close}
+                anchor="right"
+            >
+                <Create
+                    saveButtonProps={saveButtonProps}
+                    headerProps={{
+                        avatar: (
+                            <IconButton
+                                onClick={() => close()}
+                                sx={{
+                                    width: "30px",
+                                    height: "30px",
+                                    mb: "5px",
+                                }}
+                            >
+                                <CloseOutlined />
+                            </IconButton>
+                        ),
+                        action: null,
+                    }}
+                    wrapperProps={{ sx: { overflowY: "scroll", height: "100vh" } }}
+                >
+                    <Stack>
+                        <Box
+                            paddingX="50px"
+                            justifyContent="center"
+                            alignItems="center"
                             sx={{
-                                width: "30px",
-                                height: "30px",
-                                mb: "5px",
+                                paddingX: {
+                                    xs: 1,
+                                    md: 6,
+                                },
                             }}
                         >
-                            <CloseOutlined />
-                        </IconButton>
-                    ),
-                    action: null,
-                }}
-                wrapperProps={{ sx: { overflowY: "scroll", height: "100vh" } }}
-            >
-                <Stack>
-                    <Box
-                        paddingX="50px"
-                        justifyContent="center"
-                        alignItems="center"
-                        sx={{
-                            paddingX: {
-                                xs: 1,
-                                md: 6,
-                            },
-                        }}
-                    >
-                        <form onSubmit={handleSubmit(onFinish)}>
-                            <FormControl sx={{ width: "100%" }}>
-                                <FormLabel required>
-                                    {t("documents.fields.images.label")}
-                                </FormLabel>
-                                <Stack
-                                    display="flex"
-                                    alignItems="center"
-                                    border="1px dashed  "
-                                    borderColor="primary.main"
-                                    borderRadius="5px"
-                                    padding="10px"
-                                    marginTop="5px"
-                                >
-                                    <label htmlFor="images-input">
-                                        <Input
-                                            id="images-input"
-                                            type="file"
-                                            sx={{
-                                                display: "none",
-                                            }}
-                                            onChange={onChangeHandler}
-                                        />
-                                        <input
-                                            id="file"
-                                            {...register("images", {
-                                                required: t(
-                                                    "errors.required.field",
-                                                    { field: "Image" },
-                                                ),
-                                            })}
-                                            type="hidden"
-                                        />
-                                        <Avatar
-                                            sx={{
-                                                cursor: "pointer",
-                                                width: {
-                                                    xs: 100,
-                                                    md: 180,
-                                                },
-                                                height: {
-                                                    xs: 100,
-                                                    md: 180,
-                                                },
-                                            }}
-                                            src={
-                                                apiUrl + '/uploads/' + (
-                                                    (imageInput as IFile[]) &&
-                                                    ((imageInput as IFile[])[0]
-                                                        .url as string)
+                            <form onSubmit={handleSubmit(onFinish)}>
+                                <FormControl sx={{ width: "100%" }}>
+                                    <FormLabel required>
+                                        {t("documents.fields.images.label")}
+                                    </FormLabel>
+                                    <Stack
+                                        display="flex"
+                                        alignItems="center"
+                                        border="1px dashed  "
+                                        borderColor="primary.main"
+                                        borderRadius="5px"
+                                        padding="10px"
+                                        marginTop="5px"
+                                    >
+                                        <label htmlFor="images-input">
+                                            <Input
+                                                id="images-input"
+                                                type="file"
+                                                sx={{
+                                                    display: "none",
+                                                }}
+                                                inputProps={{ multiple: true }}
+                                                onChange={onChangeHandler}
+                                            />
+                                            <input
+                                                id="file"
+                                                {...register("images", {
+                                                    required: t(
+                                                        "errors.required.field",
+                                                        { field: "Image" },
+                                                    ),
+                                                })}
+                                                type="hidden"
+                                            />
+                                            {
+                                                typeof imageInput != "string" && imageInput?.map((item: IFile, index) => (
+                                                    <Avatar
+                                                        sx={{
+                                                            cursor: "pointer",
+                                                            width: {
+                                                                xs: 100,
+                                                                md: 180,
+                                                            },
+                                                            height: {
+                                                                xs: 100,
+                                                                md: 180,
+                                                            },
+                                                            borderRadius: 1
+                                                        }}
+                                                        key={index}
+                                                        src={
+                                                            apiUrl + '/uploads/' + item.url
+                                                        }
+                                                        alt="Document Scanned Image"
+                                                    />
+                                                ))
+                                            }
+                                            {
+                                                imageInput?.length ? null : (
+                                                    <Avatar
+                                                        sx={{
+                                                            cursor: "pointer",
+                                                            width: {
+                                                                xs: 100,
+                                                                md: 180,
+                                                            },
+                                                            height: {
+                                                                xs: 100,
+                                                                md: 180,
+                                                            },
+                                                            borderRadius: 1
+                                                        }}
+                                                        alt="Document Scanned Image"
+                                                    />
                                                 )
                                             }
-                                            alt="Document Scanned Image"
+                                        </label>
+                                        <Typography
+                                            variant="body2"
+                                            style={{
+                                                fontWeight: 800,
+                                                marginTop: "8px",
+                                            }}
+                                        >
+                                            {t(
+                                                "documents.fields.images.description",
+                                            )}
+                                        </Typography>
+                                        <Typography style={{ fontSize: "12px" }}>
+                                            {t("documents.fields.images.validation")}
+                                        </Typography>
+                                    </Stack>
+                                    {errors.images && (
+                                        <FormHelperText error>
+                                            {errors.images.message}
+                                        </FormHelperText>
+                                    )}
+                                </FormControl>
+                                <Stack gap="10px" marginTop="10px">
+                                    <FormControl>
+                                        <FormLabel required>
+                                            {t("documents.fields.name")}
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            id="name"
+                                            {...register("name", {
+                                                required: t(
+                                                    "errors.required.field",
+                                                    { field: "Name" },
+                                                ),
+                                            })}
+                                            style={{ height: "40px" }}
                                         />
-                                    </label>
-                                    <Typography
-                                        variant="body2"
-                                        style={{
-                                            fontWeight: 800,
-                                            marginTop: "8px",
-                                        }}
-                                    >
-                                        {t(
-                                            "documents.fields.images.description",
+                                        {errors.name && (
+                                            <FormHelperText error>
+                                                {errors.name.message}
+                                            </FormHelperText>
                                         )}
-                                    </Typography>
-                                    <Typography style={{ fontSize: "12px" }}>
-                                        {t("documents.fields.images.validation")}
-                                    </Typography>
-                                </Stack>
-                                {errors.images && (
-                                    <FormHelperText error>
-                                        {errors.images.message}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <Stack gap="10px" marginTop="10px">
-                                <FormControl>
-                                    <FormLabel required>
-                                        {t("documents.fields.name")}
-                                    </FormLabel>
-                                    <OutlinedInput
-                                        id="name"
-                                        {...register("name", {
-                                            required: t(
-                                                "errors.required.field",
-                                                { field: "Name" },
-                                            ),
-                                        })}
-                                        style={{ height: "40px" }}
-                                    />
-                                    {errors.name && (
-                                        <FormHelperText error>
-                                            {errors.name.message}
-                                        </FormHelperText>
-                                    )}
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel required>
-                                        {t("documents.fields.title")}
-                                    </FormLabel>
-                                    <OutlinedInput
-                                        id="title"
-                                        {...register("title", {
-                                            required: t(
-                                                "errors.required.field",
-                                                { field: "Description" },
-                                            ),
-                                        })}
-                                        multiline
-                                        minRows={5}
-                                        maxRows={5}
-                                    />
-                                    {errors.title && (
-                                        <FormHelperText error>
-                                            {errors.title.message}
-                                        </FormHelperText>
-                                    )}
-                                </FormControl>
-                                <FormControl>
-                                    <Controller
-                                        control={control}
-                                        name="boxFile"
-                                        rules={{
-                                            required: t(
-                                                "errors.required.field",
-                                                { field: "BoxFile" },
-                                            ),
-                                        }}
-                                        render={({ field }) => (
-                                            <Autocomplete
-                                                disablePortal
-                                                {...autocompleteProps}
-                                                {...field}
-                                                onChange={(_, value) => {
-                                                    field.onChange(value);
-                                                }}
-                                                getOptionLabel={(item) => {
-                                                    return item.no
-                                                        ? `${item.no}`
-                                                        : "";
-                                                }}
-                                                isOptionEqualToValue={(
-                                                    option,
-                                                    value,
-                                                ) =>
-                                                    value === undefined ||
-                                                    option?.id?.toString() ===
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormLabel required>
+                                            {t("documents.fields.title")}
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            id="title"
+                                            {...register("title", {
+                                                required: t(
+                                                    "errors.required.field",
+                                                    { field: "Description" },
+                                                ),
+                                            })}
+                                            multiline
+                                            minRows={5}
+                                            maxRows={5}
+                                        />
+                                        {errors.title && (
+                                            <FormHelperText error>
+                                                {errors.title.message}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                    <FormControl>
+                                        <Controller
+                                            control={control}
+                                            name="boxFile"
+                                            rules={{
+                                                required: t(
+                                                    "errors.required.field",
+                                                    { field: "BoxFile" },
+                                                ),
+                                            }}
+                                            render={({ field }) => (
+                                                <Autocomplete
+                                                    disablePortal
+                                                    {...autocompleteProps}
+                                                    {...field}
+                                                    onChange={(_, value) => {
+                                                        field.onChange(value);
+                                                    }}
+                                                    getOptionLabel={(item) => {
+                                                        return item.no
+                                                            ? `${item.no}`
+                                                            : "";
+                                                    }}
+                                                    isOptionEqualToValue={(
+                                                        option,
+                                                        value,
+                                                    ) =>
+                                                        value === undefined ||
+                                                        option?.id?.toString() ===
                                                         (
                                                             value?.id ?? value
                                                         )?.toString()
-                                                }
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        {...params}
-                                                        label="BoxFile"
-                                                        variant="outlined"
-                                                        error={
-                                                            !!errors.boxFile
-                                                                ?.message
-                                                        }
-                                                        required
-                                                    />
-                                                )}
-                                            />
+                                                    }
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="BoxFile"
+                                                            variant="outlined"
+                                                            error={
+                                                                !!errors.boxFile
+                                                                    ?.message
+                                                            }
+                                                            required
+                                                        />
+                                                    )}
+                                                />
+                                            )}
+                                        />
+                                        {errors.boxFile && (
+                                            <FormHelperText error>
+                                                {errors.boxFile.message}
+                                            </FormHelperText>
                                         )}
-                                    />
-                                    {errors.boxFile && (
-                                        <FormHelperText error>
-                                            {errors.boxFile.message}
-                                        </FormHelperText>
-                                    )}
-                                </FormControl>
-                            </Stack>
-                        </form>
-                    </Box>
-                </Stack>
-            </Create>
-        </Drawer>
-    );
-};
+                                    </FormControl>
+                                </Stack>
+                            </form>
+                        </Box>
+                    </Stack>
+                </Create>
+            </Drawer>
+        );
+    };

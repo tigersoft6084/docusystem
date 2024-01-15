@@ -91,7 +91,7 @@ export const DocumentList: React.FC<IResourceComponentsProps> = () => {
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
-                                    width: 400,
+                                    width:"60%",
                                 }}
                             >
                                 <InputBase

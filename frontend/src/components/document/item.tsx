@@ -87,27 +87,11 @@ export const DocumentItem: React.FC<DocumentItem> = ({
                             >
                                 {t("documents.buttons.edit")}
                             </Button>
-                            <DeleteButton title={t("documents.buttons.delete")} recordItemId={id}/>
+                            <DeleteButton title={t("documents.buttons.delete")} recordItemId={id} />
                         </Popover>
                     </Box>
                 }
-                sx={{ padding: 0 }}
-                title={
-                    <Tooltip title={name}>
-                        <Typography
-                            sx={{
-                                fontWeight: 800,
-                                fontSize: "18px",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                textOverflow: "ellipsis",
-                                paddingLeft: 2
-                            }}
-                        >
-                            {name}
-                        </Typography>
-                    </Tooltip>
-                }
+                sx={{ padding: 0, display: "flex", justifyContent: "space-between" }}
             />
             <Box
                 sx={{
@@ -134,6 +118,19 @@ export const DocumentItem: React.FC<DocumentItem> = ({
                     flex: 1,
                 }}
             >
+                <Tooltip title={name}>
+                        <Typography
+                            sx={{
+                                fontWeight: 800,
+                                fontSize: "18px",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                textOverflow: "ellipsis",
+                            }}
+                        >
+                            {name}
+                        </Typography>
+                    </Tooltip>
                 <Tooltip title={title}>
                     <Typography
                         variant="body2"
