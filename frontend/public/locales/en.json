@@ -137,6 +137,12 @@
             "name": "Name"
         }
     },
+    "box-files":{
+        "titles": {
+            "edit": "Edit Box File",
+            "create": "Create Box File"
+        }
+    },
     "boxFiles": {
         "boxFiles": "Box Files",
         "titles": {

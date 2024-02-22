@@ -26,7 +26,6 @@ export const EditBoxFileModal: React.FC<
     formState: { errors },
 }) => {
     const t = useTranslate();
-
     return (
         <Dialog
             open={visible}
